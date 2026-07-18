@@ -12,6 +12,8 @@
     "minimum": 14,
     "verified": 14
   },
+  "manifest": "https://raw.githubusercontent.com/PalcoDoRufo/rufos-shopkeeper/main/module.json",
+  "url": "https://github.com/PalcoDoRufo/rufos-shopkeeper",
   "esmodules": [
     "scripts/module.js"
   ],
