@@ -1,0 +1,300 @@
+.window-content {
+    padding: 0px;
+}
+
+.lojinha {
+    display: grid;
+    grid-template-columns: 200px 700px 300px;
+    width: 1200px;
+    height: 750px;
+    background-color: #786452;
+    /*Retirar*/
+}
+
+.pjCheck {
+    display: grid;
+    grid-template-rows: 320px 300px;
+    background: #420F0E;
+    background: linear-gradient(240deg,rgba(66, 15, 14, 1) 0%, rgba(84, 18, 15, 1) 50%, rgba(66, 15, 12, 1) 100%);
+    color: #e9d7a1;
+}
+
+.pjCheck ul {
+    list-style-type: none;
+    margin: 15px;
+    padding: 0px;
+}
+
+.portrait {
+    margin: 15px;
+    max-width: 170px;
+    border: 2px solid #e9d7a1;
+    padding: 3px;
+}
+
+.pjCheck li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.markName {
+    font-size: 17px;
+}
+
+.pjCheckbox {
+    min-width: 18px;
+}
+
+.pjCheckbox, .itemLinha input {
+    appearance: none;
+    accent-color: rgb(102, 102, 102);
+    width: 18px;
+    height: 18px;
+    background-color: white;
+    border: 2px solid grey;   
+    position: relative;
+}
+
+.pjCheckbox:checked::before, .itemLinha input:checked::before {
+    content: "\f00c";
+    font-family: "Font Awesome 7 Pro";
+    font-size: 13px;
+    color: black;
+    position: absolute;
+    top: 80%;
+    left: 80%;
+    transform: translate(-50%, -50%);
+    line-height: 1;
+}
+
+.pjCheckbox:hover, .itemLinha input:hover  {
+    border-color: #26a0da;
+}
+
+.pjCheckbox:hover::before, .itemLinha input:hover::before  {
+    color: #26a0da;
+}
+
+.pjCheckbox:active, .itemLinha input:active  {
+    border-color: black;
+    background-color: black;
+}
+
+.pjCheckbox:active::before, .itemLinha input:active::before  {
+    color: white;
+}
+
+.pjCheckbox:checked::after, .itemLinha input:checked::after  {
+    content: none;
+}
+.pjCheckbox::before, .itemLinha input::before  {
+    content: none;
+}
+.pjCheckbox::after, .itemLinha input::after  {
+    content: none;
+}
+
+.meio {
+    display: grid;
+    grid-template-rows: 50px 620px 80px;
+    max-width: 700px;
+}
+
+.centro {
+    max-width: 700px;
+}
+
+.pjTabs {
+    background-color: #e9d7a1;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 2px;
+    max-width: 700px;
+}
+
+.tabsPj {
+    flex: 1;
+    background-color: #620100;
+    color: #ede4da;
+    border: 2px solid #e9d7a1;
+    height: 100%;
+    font-size: 15px;
+    transition: transform 0.3s ease-out, background-color 0.3s ease-out, color 0.3s ease-out;
+}
+
+.tabsPj:hover {
+    transform: scale(1.05);
+    background-color: #9E0000;
+    color: #e9d7a1;
+}
+
+.exibindo2 {
+    background-color: #9E0000;
+    color: #e9d7a1;
+    font-weight: bold;
+}
+
+.stash, .inventario, .rufo {
+    display: none;
+}
+
+.inventario {
+    background-color: #f1ebe8;
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 700px;
+    height: 620px;
+}
+
+.itemHeader {
+    background-color: #786452;
+    border: 1px solid #9f8475;
+    outline: 2px solid #786452;
+    display: grid;
+    grid-template-columns: 465px 160px 75px;
+    max-width: 698px;
+}
+
+.itemTitle {
+    font-size: 1.17em;
+    font-weight: normal;
+    color: #f7f3e8;
+    margin: 0px;
+    padding: 0px 4px 0px 4px;
+}
+
+.itemTable ul {
+    color: black;
+    padding: 0px;
+}
+
+.itemLinha {
+    display: grid;
+    grid-template-columns: 
+        22px
+        32px
+        400px
+        auto
+        70px;
+    align-items: center;
+    gap: .4rem;
+    margin: 0px;
+}
+
+.itemName {
+    padding-right: 10px;
+}
+
+.itemQuantity {
+    margin: 0px 2px 0px 2px;
+    width: 15px;
+    text-align: center;
+}
+
+.quantias {
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+}
+
+.quantias button {
+    background-color: transparent;
+    border: none;
+    color: black;
+    padding: 0px 3px 0px 3px;
+}
+
+.exibindo {
+    display: block;
+}
+
+.botoes {
+    background-color: #171f69;
+    display: grid;
+    grid-template-columns: 350px 350px;
+    align-items: center;
+    justify-items: center;
+    max-width: 700px;
+}
+
+.fazerVenda, .copiarMensagem {
+    font-size: 30px;
+    padding: 0px;
+    width: 200px;
+    --button-size: 50px;
+    background-color: #1e1d26;
+    color: #f7f3e8;
+    border: 2px solid #e8d6a0;
+    border-radius: 10px;
+    transition: transform 0.1s ease-out, background-color 0.1s ease-out, color 0.1s ease-out;
+}
+
+.fazerVenda:hover, .copiarMensagem:hover {
+    transform: scale(1.05);
+    background-color: #631b1e;
+    color: #e8d6a0;
+    font-weight: bold;
+}
+
+.fazerVenda:active, .copiarMensagem:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.resumo {
+    background-color: #e8e0dc;
+    color: black;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.resumo h1 {
+    height: 48px;
+    text-align: center;
+    color: black;
+    font-weight: normal;
+    margin-bottom: 24px;
+}
+
+.resumo ul {
+    padding: 0px;
+    list-style-type: none;
+}
+
+.resumo li {
+    margin-bottom: 10px;
+}
+
+.linha1 {
+    display: grid;
+    grid-template-columns: 
+        32px auto;
+    align-items: center;
+    gap: .4rem;
+}
+
+.linha2 {
+    display: grid;
+    grid-template-columns:
+        32px auto auto auto;
+    align-items: center;
+    gap: .4rem;
+}
+
+.total-box,
+.player-box {
+    flex: 1;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 17px;
+}
+
+.total-box span,
+.player-box span {
+    color: #666;
+    text-transform: uppercase;
+    font-weight: 600;
+}

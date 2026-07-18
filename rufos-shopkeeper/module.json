@@ -1,0 +1,37 @@
+{
+  "id": "rufos-shopkeeper",
+  "title": "Rufo's Shopkeeper",
+  "description": "A vendinha de itens mágicos do Rufo para facilitar a venda de itens para Pathfinder 2e.",
+  "version": "0.1.0",
+  "authors": [
+    {
+      "name": "Rufo da Areia Sombria"
+    }
+  ],
+  "compatibility": {
+    "minimum": 14,
+    "verified": 14
+  },
+  "esmodules": [
+    "scripts/module.js"
+  ],
+  "styles": [
+    "styles/style.css"
+  ],
+  "socket": true,
+  "relationships": {
+    "systems": [
+      {
+        "id": "pf2e",
+        "type": "system"
+      }
+    ],
+    "requires": [
+        {
+            "id": "socketlib",
+            "type": "module",
+            "manifest": "https://github.com/farling42/foundryvtt-socketlib/releases/latest/download/module.json"
+        }
+    ]
+  }
+}

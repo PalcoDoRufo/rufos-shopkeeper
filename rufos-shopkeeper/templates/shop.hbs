@@ -1,0 +1,460 @@
+<div class="lojinha">
+    <aside class="pjCheck">
+        <img src="modules/rufos-shopkeeper/assets/Stash.webp" class="portrait">
+        <ul>
+            {{#each personagens}}
+            <li><input type="checkbox" class="pjCheckbox" data-actor="{{id}}" {{#if checked}}checked{{/if}}> <span
+                    class="markName">{{name}}</span></li>
+            {{/each}}
+        </ul>
+    </aside>
+    <main class="meio">
+        <header class="pjTabs">
+            <button class="tabsPj" data-tab="stash">Stash</button>
+            {{#each personagens}}
+            <button class="tabsPj" data-tab="{{id}}">{{name}}</button>
+            {{/each}}
+        </header>
+        <div class="centro">
+            <section class="rufo exibindo" id="rufo">
+                <img src="modules/rufos-shopkeeper/assets/RufosShopkeeper.webp" alt="shopkeeper">
+            </section>
+            <section class="inventario" data-inventario="stash">
+                <div class="itemType">
+                    <header class="itemHeader">
+                        <h3 class="itemTitle">Weapons & Shields</h3 class="itemTitle">
+                        <div class="quantidade">Quantidade</div>
+                        <div class="valor">Valor</div>
+                    </header>
+                    <div class="itemTable">
+                        <ul>
+                            {{#each stash.weapons}}
+                            <li class="itemLinha">
+                                <input type="checkbox" class="itemCheckbox" data-uuid="{{item.uuid}}" data-name="Stash"
+                                    {{#if checked}}checked{{/if}}>
+                                <img src="{{item.img}}">
+                                <span class="itemName">{{item.name}}</span>
+                                <div class="quantias">
+                                    <button class="menosUm">-</button>
+                                    <span class="itemQuantity" data-max="{{item.system.quantity}}"
+                                        data-uuid="{{item.uuid}}">{{quantity}}</span>
+                                    <button class="maisUm">+</button>
+                                </div>
+                                <span class="itemValue">{{item.system.price.value}}</span>
+                            </li>
+                            {{/each}}
+                            {{#each stash.shields}}
+                            <li class="itemLinha">
+                                <input type="checkbox" class="itemCheckbox" data-uuid="{{item.uuid}}" data-name="Stash"
+                                    {{#if checked}}checked{{/if}}>
+                                <img src="{{item.img}}">
+                                <span class="itemName">{{item.name}}</span>
+                                <div class="quantias">
+                                    <button class="menosUm">-</button>
+                                    <span class="itemQuantity" data-max="{{item.system.quantity}}"
+                                        data-uuid="{{item.uuid}}">{{quantity}}</span>
+                                    <button class="maisUm">+</button>
+                                </div>
+                                <span class="itemValue">{{item.system.price.value}}</span>
+                            </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+                <div class="itemType">
+                    <header class="itemHeader">
+                        <h3 class="itemTitle">Armor</h3 class="itemTitle">
+                        <div class="quantidade">Quantidade</div>
+                        <div class="valor">Valor</div>
+                    </header>
+                    <div class="itemTable">
+                        <ul>
+                            {{#each stash.armor}}
+                            <li class="itemLinha">
+                                <input type="checkbox" class="itemCheckbox" data-uuid="{{item.uuid}}" data-name="Stash"
+                                    {{#if checked}}checked{{/if}}>
+                                <img src="{{item.img}}">
+                                <span class="itemName">{{item.name}}</span>
+                                <div class="quantias">
+                                    <button class="menosUm">-</button>
+                                    <span class="itemQuantity" data-max="{{item.system.quantity}}"
+                                        data-uuid="{{item.uuid}}">{{quantity}}</span>
+                                    <button class="maisUm">+</button>
+                                </div>
+                                <span class="itemValue">{{item.system.price.value}}</span>
+                            </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+                <div class="itemType">
+                    <header class="itemHeader">
+                        <h3 class="itemTitle">Equipment</h3 class="itemTitle">
+                        <div class="quantidade">Quantidade</div>
+                        <div class="valor">Valor</div>
+                    </header>
+                    <div class="itemTable">
+                        <ul>
+                            {{#each stash.equipment}}
+                            <li class="itemLinha">
+                                <input type="checkbox" class="itemCheckbox" data-uuid="{{item.uuid}}" data-name="Stash"
+                                    {{#if checked}}checked{{/if}}>
+                                <img src="{{item.img}}">
+                                <span class="itemName">{{item.name}}</span>
+                                <div class="quantias">
+                                    <button class="menosUm">-</button>
+                                    <span class="itemQuantity" data-max="{{item.system.quantity}}"
+                                        data-uuid="{{item.uuid}}">{{quantity}}</span>
+                                    <button class="maisUm">+</button>
+                                </div>
+                                <span class="itemValue">{{item.system.price.value}}</span>
+                            </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+                <div class="itemType">
+                    <header class="itemHeader">
+                        <h3 class="itemTitle">Consumable</h3 class="itemTitle">
+                        <div class="quantidade">Quantidade</div>
+                        <div class="valor">Valor</div>
+                    </header>
+                    <div class="itemTable">
+                        <ul>
+                            {{#each stash.consumables}}
+                            <li class="itemLinha">
+                                <input type="checkbox" class="itemCheckbox" data-uuid="{{item.uuid}}" data-name="Stash"
+                                    {{#if checked}}checked{{/if}}>
+                                <img src="{{item.img}}">
+                                <span class="itemName">{{item.name}}</span>
+                                <div class="quantias">
+                                    <button class="menosUm">-</button>
+                                    <span class="itemQuantity" data-max="{{item.system.quantity}}"
+                                        data-uuid="{{item.uuid}}">{{quantity}}</span>
+                                    <button class="maisUm">+</button>
+                                </div>
+                                <span class="itemValue">{{item.system.price.value}}</span>
+                            </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+                <div class="itemType">
+                    <header class="itemHeader">
+                        <h3 class="itemTitle">Ammunition</h3 class="itemTitle">
+                        <div class="quantidade">Quantidade</div>
+                        <div class="valor">Valor</div>
+                    </header>
+                    <div class="itemTable">
+                        <ul>
+                            {{#each stash.ammunition}}
+                            <li class="itemLinha">
+                                <input type="checkbox" class="itemCheckbox" data-uuid="{{item.uuid}}" data-name="Stash"
+                                    {{#if checked}}checked{{/if}}>
+                                <img src="{{item.img}}">
+                                <span class="itemName">{{item.name}}</span>
+                                <div class="quantias">
+                                    <button class="menosUm">-</button>
+                                    <span class="itemQuantity" data-max="{{item.system.quantity}}"
+                                        data-uuid="{{item.uuid}}">{{quantity}}</span>
+                                    <button class="maisUm">+</button>
+                                </div>
+                                <span class="itemValue">{{item.system.price.value}}</span>
+                            </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+                <div class="itemType">
+                    <header class="itemHeader">
+                        <h3 class="itemTitle">Treasure</h3 class="itemTitle">
+                        <div class="quantidade">Quantidade</div>
+                        <div class="valor">Valor</div>
+                    </header>
+                    <div class="itemTable">
+                        <ul>
+                            {{#each stash.treasure}}
+                            <li class="itemLinha">
+                                <input type="checkbox" class="itemCheckbox" data-uuid="{{item.uuid}}" data-name="Stash"
+                                    {{#if checked}}checked{{/if}}>
+                                <img src="{{item.img}}">
+                                <span class="itemName">{{item.name}}</span>
+                                <div class="quantias">
+                                    <button class="menosUm">-</button>
+                                    <span class="itemQuantity" data-max="{{item.system.quantity}}"
+                                        data-uuid="{{item.uuid}}">{{quantity}}</span>
+                                    <button class="maisUm">+</button>
+                                </div>
+                                <span class="itemValue">{{item.system.price.value}}</span>
+                            </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+                <div class="itemType">
+                    <header class="itemHeader">
+                        <h3 class="itemTitle">Containers</h3 class="itemTitle">
+                        <div class="quantidade">Quantidade</div>
+                        <div class="valor">Valor</div>
+                    </header>
+                    <div class="itemTable">
+                        <ul>
+                            {{#each stash.container}}
+                            <li class="itemLinha">
+                                <input type="checkbox" class="itemCheckbox" data-uuid="{{item.uuid}}" data-name="Stash"
+                                    {{#if checked}}checked{{/if}}>
+                                <img src="{{item.img}}">
+                                <span class="itemName">{{item.name}}</span>
+                                <div class="quantias">
+                                    <button class="menosUm">-</button>
+                                    <span class="itemQuantity" data-max="{{item.system.quantity}}"
+                                        data-uuid="{{item.uuid}}">{{quantity}}</span>
+                                    <button class="maisUm">+</button>
+                                </div>
+                                <span class="itemValue">{{item.system.price.value}}</span>
+                            </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            {{#each personagens}}
+            <section class="inventario" data-inventario="{{id}}">
+                <div class="itemType">
+                    <header class="itemHeader">
+                        <h3 class="itemTitle">Weapons & Shields</h3 class="itemTitle">
+                        <div class="quantidade">Quantidade</div>
+                        <div class="valor">Valor</div>
+                    </header>
+                    <div class="itemTable">
+                        <ul>
+                            {{#each weapons}}
+                            <li class="itemLinha">
+                                <input type="checkbox" class="itemCheckbox" data-uuid="{{item.uuid}}"
+                                    data-name="{{../name}}" data-id="{{../id}}"{{#if checked}}checked{{/if}}>
+                                <img src="{{item.img}}">
+                                <span class="itemName">{{item.name}}</span>
+                                <div class="quantias">
+                                    <button class="menosUm">-</button>
+                                    <span class="itemQuantity" data-max="{{item.system.quantity}}"
+                                        data-uuid="{{item.uuid}}">{{quantity}}</span>
+                                    <button class="maisUm">+</button>
+                                </div>
+                                <span class="itemValue">{{item.system.price.value}}</span>
+                            </li>
+                            {{/each}}
+                            {{#each shields}}
+                            <li class="itemLinha">
+                                <input type="checkbox" class="itemCheckbox" data-uuid="{{item.uuid}}"
+                                    data-name="{{../name}}" data-id="{{../id}}"{{#if checked}}checked{{/if}}>
+                                <img src="{{item.img}}">
+                                <span class="itemName">{{item.name}}</span>
+                                <div class="quantias">
+                                    <button class="menosUm">-</button>
+                                    <span class="itemQuantity" data-max="{{item.system.quantity}}"
+                                        data-uuid="{{item.uuid}}">{{quantity}}</span>
+                                    <button class="maisUm">+</button>
+                                </div>
+                                <span class="itemValue">{{item.system.price.value}}</span>
+                            </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+                <div class="itemType">
+                    <header class="itemHeader">
+                        <h3 class="itemTitle">Armor</h3 class="itemTitle">
+                        <div class="quantidade">Quantidade</div>
+                        <div class="valor">Valor</div>
+                    </header>
+                    <div class="itemTable">
+                        <ul>
+                            {{#each armor}}
+                            <li class="itemLinha">
+                                <input type="checkbox" class="itemCheckbox" data-uuid="{{item.uuid}}"
+                                    data-name="{{../name}}" data-id="{{../id}}"{{#if checked}}checked{{/if}}>
+                                <img src="{{item.img}}">
+                                <span class="itemName">{{item.name}}</span>
+                                <div class="quantias">
+                                    <button class="menosUm">-</button>
+                                    <span class="itemQuantity" data-max="{{item.system.quantity}}"
+                                        data-uuid="{{item.uuid}}">{{quantity}}</span>
+                                    <button class="maisUm">+</button>
+                                </div>
+                                <span class="itemValue">{{item.system.price.value}}</span>
+                            </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+                <div class="itemType">
+                    <header class="itemHeader">
+                        <h3 class="itemTitle">Equipment</h3 class="itemTitle">
+                        <div class="quantidade">Quantidade</div>
+                        <div class="valor">Valor</div>
+                    </header>
+                    <div class="itemTable">
+                        <ul>
+                            {{#each equipment}}
+                            <li class="itemLinha">
+                                <input type="checkbox" class="itemCheckbox" data-uuid="{{item.uuid}}"
+                                    data-name="{{../name}}" data-id="{{../id}}"{{#if checked}}checked{{/if}}>
+                                <img src="{{item.img}}">
+                                <span class="itemName">{{item.name}}</span>
+                                <div class="quantias">
+                                    <button class="menosUm">-</button>
+                                    <span class="itemQuantity" data-max="{{item.system.quantity}}"
+                                        data-uuid="{{item.uuid}}">{{quantity}}</span>
+                                    <button class="maisUm">+</button>
+                                </div>
+                                <span class="itemValue">{{item.system.price.value}}</span>
+                            </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+                <div class="itemType">
+                    <header class="itemHeader">
+                        <h3 class="itemTitle">Consumable</h3 class="itemTitle">
+                        <div class="quantidade">Quantidade</div>
+                        <div class="valor">Valor</div>
+                    </header>
+                    <div class="itemTable">
+                        <ul>
+                            {{#each consumables}}
+                            <li class="itemLinha">
+                                <input type="checkbox" class="itemCheckbox" data-uuid="{{item.uuid}}"
+                                    data-name="{{../name}}" data-id="{{../id}}"{{#if checked}}checked{{/if}}>
+                                <img src="{{item.img}}">
+                                <span class="itemName">{{item.name}}</span>
+                                <div class="quantias">
+                                    <button class="menosUm">-</button>
+                                    <span class="itemQuantity" data-max="{{item.system.quantity}}"
+                                        data-uuid="{{item.uuid}}">{{quantity}}</span>
+                                    <button class="maisUm">+</button>
+                                </div>
+                                <span class="itemValue">{{item.system.price.value}}</span>
+                            </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+                <div class="itemType">
+                    <header class="itemHeader">
+                        <h3 class="itemTitle">Ammunition</h3 class="itemTitle">
+                        <div class="quantidade">Quantidade</div>
+                        <div class="valor">Valor</div>
+                    </header>
+                    <div class="itemTable">
+                        <ul>
+                            {{#each ammunition}}
+                            <li class="itemLinha">
+                                <input type="checkbox" class="itemCheckbox" data-uuid="{{item.uuid}}"
+                                    data-name="{{../name}}" data-id="{{../id}}"{{#if checked}}checked{{/if}}>
+                                <img src="{{item.img}}">
+                                <span class="itemName">{{item.name}}</span>
+                                <div class="quantias">
+                                    <button class="menosUm">-</button>
+                                    <span class="itemQuantity" data-max="{{item.system.quantity}}"
+                                        data-uuid="{{item.uuid}}">{{quantity}}</span>
+                                    <button class="maisUm">+</button>
+                                </div>
+                                <span class="itemValue">{{item.system.price.value}}</span>
+                            </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+                <div class="itemType">
+                    <header class="itemHeader">
+                        <h3 class="itemTitle">Treasure</h3 class="itemTitle">
+                        <div class="quantidade">Quantidade</div>
+                        <div class="valor">Valor</div>
+                    </header>
+                    <div class="itemTable">
+                        <ul>
+                            {{#each treasure}}
+                            <li class="itemLinha">
+                                <input type="checkbox" class="itemCheckbox" data-uuid="{{item.uuid}}"
+                                    data-name="{{../name}}" data-id="{{../id}}"{{#if checked}}checked{{/if}}>
+                                <img src="{{item.img}}">
+                                <span class="itemName">{{item.name}}</span>
+                                <div class="quantias">
+                                    <button class="menosUm">-</button>
+                                    <span class="itemQuantity" data-max="{{item.system.quantity}}"
+                                        data-uuid="{{item.uuid}}">{{quantity}}</span>
+                                    <button class="maisUm">+</button>
+                                </div>
+                                <span class="itemValue">{{item.system.price.value}}</span>
+                            </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+                <div class="itemType">
+                    <header class="itemHeader">
+                        <h3 class="itemTitle">Containers</h3 class="itemTitle">
+                        <div class="quantidade">Quantidade</div>
+                        <div class="valor">Valor</div>
+                    </header>
+                    <div class="itemTable">
+                        <ul>
+                            {{#each container}}
+                            <li class="itemLinha">
+                                <input type="checkbox" class="itemCheckbox" data-uuid="{{item.uuid}}"
+                                    data-name="{{../name}}" data-id="{{../id}}"{{#if checked}}checked{{/if}}>
+                                <img src="{{item.img}}">
+                                <span class="itemName">{{item.name}}</span>
+                                <div class="quantias">
+                                    <button class="menosUm">-</button>
+                                    <span class="itemQuantity" data-max="{{item.system.quantity}}"
+                                        data-uuid="{{item.uuid}}">{{quantity}}</span>
+                                    <button class="maisUm">+</button>
+                                </div>
+                                <span class="itemValue">{{item.system.price.value}}</span>
+                            </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            {{/each}}
+        </div>
+        <footer class="botoes">
+            <button class="fazerVenda">Vender</button>
+            <button class="copiarMensagem">Copiar</button>
+        </footer>
+    </main>
+    <aside class="resumo">
+        <h1>- Resumo da Venda -</h1>
+        <section class="venda">
+            <ul>
+                {{#each resumo}}
+                <li class="itemResumo">
+                    <div class="linha1">
+                        <img src="{{item.img}}">
+                        <span>{{item.name}}</span>
+                    </div>
+                    <div class="linha2">
+                        <span class="vazio"></span>
+                        <span><i>[{{vendedor}}]</i></span>
+                        <span>x{{quantity}}</span>
+                        <span>{{valorTexto}}</span>
+                    </div>
+                </li>
+                {{/each}}
+            </ul>
+            <div class="resumo">
+                <div class="total-box">
+                    <span>Total</span>
+                    <strong>{{valorTotalTexto}}</strong>
+                </div>
+
+                <div class="player-box">
+                    <span>Por player</span>
+                    <strong>{{valorPorJogadorTexto}}</strong>
+                </div>
+            </div>
+        </section>
+    </aside>
+</div>
