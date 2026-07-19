@@ -2,7 +2,7 @@
   "id": "rufos-shopkeeper",
   "title": "Rufo's Shopkeeper",
   "description": "A vendinha de itens mágicos do Rufo para facilitar a venda de itens para Pathfinder 2e.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "authors": [
     {
       "name": "Rufo da Areia Sombria"
@@ -13,7 +13,7 @@
     "verified": 14
   },
   "manifest": "https://raw.githubusercontent.com/PalcoDoRufo/rufos-shopkeeper/main/module.json",
-  "download": "https://github.com/PalcoDoRufo/rufos-shopkeeper/releases/download/v1.0.0/rufos-shopkeeper.zip",
+  "download": "https://github.com/PalcoDoRufo/rufos-shopkeeper/releases/download/v1.1.0/rufos-shopkeeper.zip",
   "url": "https://github.com/PalcoDoRufo/rufos-shopkeeper",
   "esmodules": [
     "scripts/module.js"

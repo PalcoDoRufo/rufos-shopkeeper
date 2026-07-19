@@ -390,6 +390,21 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
             })
         }
 
+        const personagensAside = party.members.map(actor => {
+
+            if (lojinha.playersLoja[actor.id] === undefined) {
+                lojinha.playersLoja[actor.id] = true
+                mudouPlayers = true
+            }
+            return {
+                id: actor.id,
+                name: actor.name,
+                img: actor.img,
+                checked: lojinha.playersLoja[actor.id] ?? true
+            }
+
+        })
+
         const personagens = party.members.filter(actor => game.user.isGM || actor.isOwner).map(actor => {
 
             if (lojinha.playersLoja[actor.id] === undefined) {
@@ -476,7 +491,7 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
 
         const valorPorJogadorTexto = formatarPreco(valorPorJogador)
 
-        return { personagens, stash, lojinha, viewLoja, resumo, valorTotalTexto, valorPorJogadorTexto }
+        return { personagens, personagensAside, stash, lojinha, viewLoja, resumo, valorTotalTexto, valorPorJogadorTexto }
 
     }
 
