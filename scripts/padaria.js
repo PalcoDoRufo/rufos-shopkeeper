@@ -1,14 +1,26 @@
 import { ShopState } from "./shop-state.js"
 
+export const categoriasInventario = [
+
+    ["weapons", "weapon"],
+    ["shields", "shield"],
+    ["armor", "armor"],
+    ["equipment", "equipment"],
+    ["consumables", "consumable"],
+    ["ammunition", "ammo"],
+    ["treasure", "treasure"],
+    ["container", "backpack"]
+
+]
+
 export function dadosVenda(item, lojinha) {
 
     const key = item.uuid.replaceAll(".", "_")
 
     return {
         checked: lojinha.itemsLoja[key]?.checked ?? false,
-        quantity: lojinha.itemsLoja[key]?.checked ?? 1
+        quantity: lojinha.itemsLoja[key]?.quantity ?? 1
     }
-
 }
 
 export function adicionarResumo(resumo, item, quantity, vendedor) {
@@ -29,7 +41,6 @@ export function adicionarResumo(resumo, item, quantity, vendedor) {
         valorVenda,
         valorTexto: formatarPreco(valorTotal)
     })
-
 }
 
 export function formatarPreco(cobre) {
@@ -60,7 +71,6 @@ export async function adicionarPO(actor, cobre) {
     await actor.inventory.addCoins({
         gp, sp, cp
     })
-
 }
 
 export function calcularValorPorJogador(valorTotal, quantidadeJogadores) {
@@ -84,7 +94,6 @@ export async function distribuirPO(playersLoja, valorPorJogador) {
         await adicionarPO(actor, valorPorJogador)
 
     }
-
 }
 
 export function itensVendinha(party) {
@@ -105,7 +114,6 @@ export function itensVendinha(party) {
 
             itensVendinha.push({item, actor, quantity: dados.quantity ?? 1})
         }
-
     }
 
     for (const actor of party.members) {
@@ -129,7 +137,6 @@ export function calcularVenda(itensVendinha) {
         return total + (valorVenda * venda.quantity)
 
     },0)
-
 }
 
 export async function venderItens(party) {
@@ -173,9 +180,7 @@ export async function removerItensVendidos(itens) {
         await item.update({
             "system.quantity": quantidadeRestante
         })
-
     }
-
 }
 
 export async function limparFlagsVendidas(party, itens) {

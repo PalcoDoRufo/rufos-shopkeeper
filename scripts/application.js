@@ -1,5 +1,5 @@
 import { ShopState } from "./shop-state.js"
-import { dadosVenda, formatarPreco, adicionarPO, calcularValorPorJogador, distribuirPO, itensVendinha, calcularVenda, venderItens } from "./padaria.js"
+import { categoriasInventario, dadosVenda, adicionarResumo, formatarPreco, adicionarPO, calcularValorPorJogador, distribuirPO, itensVendinha, calcularVenda, venderItens } from "./padaria.js"
 
 const { ApplicationV2, HandlebarsApplicationMixin, DialogV2 } = foundry.applications.api
 
@@ -31,6 +31,8 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
 
         const resumo = []
 
+        const stash = {}
+
         let mudouPlayers = false
 
         const moedas = [
@@ -48,106 +50,37 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
             )
         }
 
-        const stash = {
-            weapons: party.items.filter(i => i.type === "weapon" && blacklist(i)).map(item => {
-                const { checked, quantity } = dadosVenda(item, lojinha)
+        for (const [nome, tipo] of categoriasInventario) {
 
-                if (checked) {adicionarResumo(resumo, item, quantity, "Stash")}
+            stash[nome] = party.items
+                .filter(i => i.type === tipo && blacklist(i))
+                .map(item => {
 
-                return { item, checked, quantity }
-            }),
-            shields: party.items.filter(i => i.type === "shield" && blacklist(i)).map(item => {
-                const { checked, quantity } = dadosVenda(item, lojinha)
+                    const { checked, quantity } = dadosVenda(item, lojinha)
 
-                if (checked) {adicionarResumo(resumo, item, quantity, "Stash")}
+                    if (checked) {
+                        adicionarResumo(resumo, item, quantity, "Stash")
+                    }
 
-                return { item, checked, quantity }
-            }),
-            armor: party.items.filter(i => i.type === "armor" && blacklist(i)).map(item => {
-                const { checked, quantity } = dadosVenda(item, lojinha)
-
-                if (checked) {adicionarResumo(resumo, item, quantity, "Stash")}
-
-                return { item, checked, quantity }
-            }),
-            equipment: party.items.filter(i => i.type === "equipment" && blacklist(i)).map(item => {
-                const { checked, quantity } = dadosVenda(item, lojinha)
-
-                if (checked) {adicionarResumo(resumo, item, quantity, "Stash")}
-
-                return { item, checked, quantity }
-            }),
-            consumables: party.items.filter(i => i.type === "consumable" && blacklist(i)).map(item => {
-                const { checked, quantity } = dadosVenda(item, lojinha)
-
-                if (checked) {adicionarResumo(resumo, item, quantity, "Stash")}
-
-                return { item, checked, quantity }
-            }),
-            ammunition: party.items.filter(i => i.type === "ammo" && blacklist(i)).map(item => {
-                const { checked, quantity } = dadosVenda(item, lojinha)
-
-                if (checked) {adicionarResumo(resumo, item, quantity, "Stash")}
-
-                return { item, checked, quantity }
-            }),
-            treasure: party.items.filter(i => i.type === "treasure" && blacklist(i)).map(item => {
-                const { checked, quantity } = dadosVenda(item, lojinha)
-
-                if (checked) {adicionarResumo(resumo, item, quantity, "Stash")}
-
-                return { item, checked, quantity }
-            }),
-            container: party.items.filter(i => i.type === "backpack" && blacklist(i)).map(item => {
-                const { checked, quantity } = dadosVenda(item, lojinha)
-
-                if (checked) {adicionarResumo(resumo, item, quantity, "Stash")}
-
-                return { item, checked, quantity }
-            })
+                    return {item, checked, quantity}
+                })
         }
 
         for (const actor of party.members) {
-            actor.items.filter(i => i.type === "weapon" && blacklist(i)).forEach(item => {
-                const { checked, quantity } = dadosVenda(item, lojinha)
 
-                if (checked) {adicionarResumo(resumo, item, quantity, actor.name)}
-            })
-            actor.items.filter(i => i.type === "shield" && blacklist(i)).forEach(item => {
-                const { checked, quantity } = dadosVenda(item, lojinha)
+            for (const [, tipo] of categoriasInventario) {
 
-                if (checked) {adicionarResumo(resumo, item, quantity, actor.name)}
-            })
-            actor.items.filter(i => i.type === "armor" && blacklist(i)).forEach(item => {
-                const { checked, quantity } = dadosVenda(item, lojinha)
+                actor.items
+                    .filter(i => i.type === tipo && blacklist(i))
+                    .forEach(item => {
 
-                if (checked) {adicionarResumo(resumo, item, quantity, actor.name)}
-            })
-            actor.items.filter(i => i.type === "equipment" && blacklist(i)).forEach(item => {
-                const { checked, quantity } = dadosVenda(item, lojinha)
+                        const { checked, quantity } = dadosVenda(item, lojinha)
 
-                if (checked) {adicionarResumo(resumo, item, quantity, actor.name)}
-            })
-            actor.items.filter(i => i.type === "consumable" && blacklist(i)).forEach(item => {
-                const { checked, quantity } = dadosVenda(item, lojinha)
-
-                if (checked) {adicionarResumo(resumo, item, quantity, actor.name)}
-            })
-            actor.items.filter(i => i.type === "ammo" && blacklist(i)).forEach(item => {
-                const { checked, quantity } = dadosVenda(item, lojinha)
-
-                if (checked) {adicionarResumo(resumo, item, quantity, actor.name)}
-            })
-            actor.items.filter(i => i.type === "treasure" && blacklist(i)).forEach(item => {
-                const { checked, quantity } = dadosVenda(item, lojinha)
-
-                if (checked) {adicionarResumo(resumo, item, quantity, actor.name)}
-            })
-            actor.items.filter(i => i.type === "backpack" && blacklist(i)).forEach(item => {
-                const { checked, quantity } = dadosVenda(item, lojinha)
-
-                if (checked) {adicionarResumo(resumo, item, quantity, actor.name)}
-            })
+                        if (checked) {
+                            adicionarResumo(resumo, item, quantity, actor.name)
+                        }
+                    })
+            }
         }
 
         const personagensAside = party.members.map(actor => {
@@ -162,65 +95,42 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
                 img: actor.img,
                 checked: lojinha.playersLoja[actor.id] ?? true
             }
-
         })
 
-        const personagens = party.members.filter(actor => game.user.isGM || actor.isOwner).map(actor => {
+        const personagens = party.members
+            .filter(actor => game.user.isGM || actor.isOwner)
+            .map(actor => {
 
-            if (lojinha.playersLoja[actor.id] === undefined) {
-                lojinha.playersLoja[actor.id] = true
-                mudouPlayers = true
-            }
+                if (lojinha.playersLoja[actor.id] === undefined) {
+                    lojinha.playersLoja[actor.id] = true
+                    mudouPlayers = true
+                }
 
-            return {
+                const inventario = {}
 
-                id: actor.id,
-                name: actor.name,
-                img: actor.img,
-                checked: lojinha.playersLoja[actor.id] ?? true,
+                for (const [nome, tipo] of categoriasInventario) {
 
-                weapons: actor.items.filter(i => i.type === "weapon" && blacklist(i)).map(item => {
-                    const { checked, quantity } = dadosVenda(item, lojinha)
+                    inventario[nome] = actor.items
+                        .filter(i => i.type === tipo && blacklist(i))
+                        .map(item => {
 
-                    return { item, checked, quantity }
-                }),
-                shields: actor.items.filter(i => i.type === "shield" && blacklist(i)).map(item => {
-                    const { checked, quantity } = dadosVenda(item, lojinha)
+                            const { checked, quantity } = dadosVenda(item, lojinha)
 
-                    return { item, checked, quantity }
-                }),
-                armor: actor.items.filter(i => i.type === "armor" && blacklist(i)).map(item => {
-                    const { checked, quantity } = dadosVenda(item, lojinha)
+                            return {item, checked, quantity}
+                        })
+                }
 
-                    return { item, checked, quantity }
-                }),
-                equipment: actor.items.filter(i => i.type === "equipment" && blacklist(i)).map(item => {
-                    const { checked, quantity } = dadosVenda(item, lojinha)
+                return {
 
-                    return { item, checked, quantity }
-                }),
-                consumables: actor.items.filter(i => i.type === "consumable" && blacklist(i)).map(item => {
-                    const { checked, quantity } = dadosVenda(item, lojinha)
+                    id: actor.id,
+                    name: actor.name,
+                    img: actor.img,
+                    checked: lojinha.playersLoja[actor.id] ?? true,
 
-                    return { item, checked, quantity }
-                }),
-                ammunition: actor.items.filter(i => i.type === "ammo" && blacklist(i)).map(item => {
-                    const { checked, quantity } = dadosVenda(item, lojinha)
+                    ...inventario
 
-                    return { item, checked, quantity }
-                }),
-                treasure: actor.items.filter(i => i.type === "treasure" && blacklist(i)).map(item => {
-                    const { checked, quantity } = dadosVenda(item, lojinha)
-
-                    return { item, checked, quantity }
-                }),
-                container: actor.items.filter(i => i.type === "backpack" && blacklist(i)).map(item => {
-                    const { checked, quantity } = dadosVenda(item, lojinha)
-
-                    return { item, checked, quantity }
-                })
-            }
-        })
+                }
+            })
 
         const valorTotal = resumo.reduce((total, item) => {
             return total + (item.valorVenda * item.quantity)
@@ -430,7 +340,6 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
             } finally {
                 this._vendaEmAndamento = false
             }
-
         }
 
         this.element.removeEventListener("click", this._onSellClick)
