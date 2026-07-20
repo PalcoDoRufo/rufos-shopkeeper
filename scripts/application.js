@@ -52,160 +52,56 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
             weapons: party.items.filter(i => i.type === "weapon" && blacklist(i)).map(item => {
                 const { checked, quantity } = dadosVenda(item, lojinha)
 
-                const preco = item.system.price.value.copperValue
-
-                const valorVenda =
-                    item.type === "treasure"
-                        ? preco
-                        : Math.floor(preco / 2)
-
-                const valorTotal = valorVenda * quantity
-
-                if (checked) {
-                    resumo.push({
-                        item, vendedor: "Stash", quantity, valorVenda, valorTexto: formatarPreco(valorTotal)
-                    })
-                }
+                if (checked) {adicionarResumo(resumo, item, quantity, "Stash")}
 
                 return { item, checked, quantity }
             }),
             shields: party.items.filter(i => i.type === "shield" && blacklist(i)).map(item => {
                 const { checked, quantity } = dadosVenda(item, lojinha)
 
-                const preco = item.system.price.value.copperValue
-
-                const valorVenda =
-                    item.type === "treasure"
-                        ? preco
-                        : Math.floor(preco / 2)
-
-                const valorTotal = valorVenda * quantity
-
-                if (checked) {
-                    resumo.push({
-                        item, vendedor: "Stash", quantity, valorVenda, valorTexto: formatarPreco(valorTotal)
-                    })
-                }
+                if (checked) {adicionarResumo(resumo, item, quantity, "Stash")}
 
                 return { item, checked, quantity }
             }),
             armor: party.items.filter(i => i.type === "armor" && blacklist(i)).map(item => {
                 const { checked, quantity } = dadosVenda(item, lojinha)
 
-                const preco = item.system.price.value.copperValue
-
-                const valorVenda =
-                    item.type === "treasure"
-                        ? preco
-                        : Math.floor(preco / 2)
-
-                const valorTotal = valorVenda * quantity
-
-                if (checked) {
-                    resumo.push({
-                        item, vendedor: "Stash", quantity, valorVenda, valorTexto: formatarPreco(valorTotal)
-                    })
-                }
+                if (checked) {adicionarResumo(resumo, item, quantity, "Stash")}
 
                 return { item, checked, quantity }
             }),
             equipment: party.items.filter(i => i.type === "equipment" && blacklist(i)).map(item => {
                 const { checked, quantity } = dadosVenda(item, lojinha)
 
-                const preco = item.system.price.value.copperValue
-
-                const valorVenda =
-                    item.type === "treasure"
-                        ? preco
-                        : Math.floor(preco / 2)
-
-                const valorTotal = valorVenda * quantity
-
-                if (checked) {
-                    resumo.push({
-                        item, vendedor: "Stash", quantity, valorVenda, valorTexto: formatarPreco(valorTotal)
-                    })
-                }
+                if (checked) {adicionarResumo(resumo, item, quantity, "Stash")}
 
                 return { item, checked, quantity }
             }),
             consumables: party.items.filter(i => i.type === "consumable" && blacklist(i)).map(item => {
                 const { checked, quantity } = dadosVenda(item, lojinha)
 
-                const preco = item.system.price.value.copperValue
-
-                const valorVenda =
-                    item.type === "treasure"
-                        ? preco
-                        : Math.floor(preco / 2)
-
-                const valorTotal = valorVenda * quantity
-
-                if (checked) {
-                    resumo.push({
-                        item, vendedor: "Stash", quantity, valorVenda, valorTexto: formatarPreco(valorTotal)
-                    })
-                }
+                if (checked) {adicionarResumo(resumo, item, quantity, "Stash")}
 
                 return { item, checked, quantity }
             }),
             ammunition: party.items.filter(i => i.type === "ammo" && blacklist(i)).map(item => {
                 const { checked, quantity } = dadosVenda(item, lojinha)
 
-                const preco = item.system.price.value.copperValue
-
-                const valorVenda =
-                    item.type === "treasure"
-                        ? preco
-                        : Math.floor(preco / 2)
-
-                const valorTotal = valorVenda * quantity
-
-                if (checked) {
-                    resumo.push({
-                        item, vendedor: "Stash", quantity, valorVenda, valorTexto: formatarPreco(valorTotal)
-                    })
-                }
+                if (checked) {adicionarResumo(resumo, item, quantity, "Stash")}
 
                 return { item, checked, quantity }
             }),
             treasure: party.items.filter(i => i.type === "treasure" && blacklist(i)).map(item => {
                 const { checked, quantity } = dadosVenda(item, lojinha)
 
-                const preco = item.system.price.value.copperValue
-
-                const valorVenda =
-                    item.type === "treasure"
-                        ? preco
-                        : Math.floor(preco / 2)
-
-                const valorTotal = valorVenda * quantity
-
-                if (checked) {
-                    resumo.push({
-                        item, vendedor: "Stash", quantity, valorVenda, valorTexto: formatarPreco(valorTotal)
-                    })
-                }
+                if (checked) {adicionarResumo(resumo, item, quantity, "Stash")}
 
                 return { item, checked, quantity }
             }),
             container: party.items.filter(i => i.type === "backpack" && blacklist(i)).map(item => {
                 const { checked, quantity } = dadosVenda(item, lojinha)
 
-                const preco = item.system.price.value.copperValue
-
-                const valorVenda =
-                    item.type === "treasure"
-                        ? preco
-                        : Math.floor(preco / 2)
-
-                const valorTotal = valorVenda * quantity
-
-                if (checked) {
-                    resumo.push({
-                        item, vendedor: "Stash", quantity, valorVenda, valorTexto: formatarPreco(valorTotal)
-                    })
-                }
+                if (checked) {adicionarResumo(resumo, item, quantity, "Stash")}
 
                 return { item, checked, quantity }
             })
@@ -215,146 +111,42 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
             actor.items.filter(i => i.type === "weapon" && blacklist(i)).forEach(item => {
                 const { checked, quantity } = dadosVenda(item, lojinha)
 
-                const preco = item.system.price.value.copperValue
-
-                const valorVenda =
-                    item.type === "treasure"
-                        ? preco
-                        : Math.floor(preco / 2)
-
-                const valorTotal = valorVenda * quantity
-
-                if (checked) {
-                    resumo.push({
-                        item, vendedor: actor.name, quantity, valorVenda, valorTexto: formatarPreco(valorTotal)
-                    })
-                }
+                if (checked) {adicionarResumo(resumo, item, quantity, actor.name)}
             })
             actor.items.filter(i => i.type === "shield" && blacklist(i)).forEach(item => {
                 const { checked, quantity } = dadosVenda(item, lojinha)
 
-                const preco = item.system.price.value.copperValue
-
-                const valorVenda =
-                    item.type === "treasure"
-                        ? preco
-                        : Math.floor(preco / 2)
-
-                const valorTotal = valorVenda * quantity
-
-                if (checked) {
-                    resumo.push({
-                        item, vendedor: actor.name, quantity, valorVenda, valorTexto: formatarPreco(valorTotal)
-                    })
-                }
+                if (checked) {adicionarResumo(resumo, item, quantity, actor.name)}
             })
             actor.items.filter(i => i.type === "armor" && blacklist(i)).forEach(item => {
                 const { checked, quantity } = dadosVenda(item, lojinha)
 
-                const preco = item.system.price.value.copperValue
-
-                const valorVenda =
-                    item.type === "treasure"
-                        ? preco
-                        : Math.floor(preco / 2)
-
-                const valorTotal = valorVenda * quantity
-
-                if (checked) {
-                    resumo.push({
-                        item, vendedor: actor.name, quantity, valorVenda, valorTexto: formatarPreco(valorTotal)
-                    })
-                }
+                if (checked) {adicionarResumo(resumo, item, quantity, actor.name)}
             })
             actor.items.filter(i => i.type === "equipment" && blacklist(i)).forEach(item => {
                 const { checked, quantity } = dadosVenda(item, lojinha)
 
-                const preco = item.system.price.value.copperValue
-
-                const valorVenda =
-                    item.type === "treasure"
-                        ? preco
-                        : Math.floor(preco / 2)
-
-                const valorTotal = valorVenda * quantity
-
-                if (checked) {
-                    resumo.push({
-                        item, vendedor: actor.name, quantity, valorVenda, valorTexto: formatarPreco(valorTotal)
-                    })
-                }
+                if (checked) {adicionarResumo(resumo, item, quantity, actor.name)}
             })
             actor.items.filter(i => i.type === "consumable" && blacklist(i)).forEach(item => {
                 const { checked, quantity } = dadosVenda(item, lojinha)
 
-                const preco = item.system.price.value.copperValue
-
-                const valorVenda =
-                    item.type === "treasure"
-                        ? preco
-                        : Math.floor(preco / 2)
-
-                const valorTotal = valorVenda * quantity
-
-                if (checked) {
-                    resumo.push({
-                        item, vendedor: actor.name, quantity, valorVenda, valorTexto: formatarPreco(valorTotal)
-                    })
-                }
+                if (checked) {adicionarResumo(resumo, item, quantity, actor.name)}
             })
             actor.items.filter(i => i.type === "ammo" && blacklist(i)).forEach(item => {
                 const { checked, quantity } = dadosVenda(item, lojinha)
 
-                const preco = item.system.price.value.copperValue
-
-                const valorVenda =
-                    item.type === "treasure"
-                        ? preco
-                        : Math.floor(preco / 2)
-
-                const valorTotal = valorVenda * quantity
-
-                if (checked) {
-                    resumo.push({
-                        item, vendedor: actor.name, quantity, valorVenda, valorTexto: formatarPreco(valorTotal)
-                    })
-                }
+                if (checked) {adicionarResumo(resumo, item, quantity, actor.name)}
             })
             actor.items.filter(i => i.type === "treasure" && blacklist(i)).forEach(item => {
                 const { checked, quantity } = dadosVenda(item, lojinha)
 
-                const preco = item.system.price.value.copperValue
-
-                const valorVenda =
-                    item.type === "treasure"
-                        ? preco
-                        : Math.floor(preco / 2)
-
-                const valorTotal = valorVenda * quantity
-
-                if (checked) {
-                    resumo.push({
-                        item, vendedor: actor.name, quantity, valorVenda, valorTexto: formatarPreco(valorTotal)
-                    })
-                }
+                if (checked) {adicionarResumo(resumo, item, quantity, actor.name)}
             })
             actor.items.filter(i => i.type === "backpack" && blacklist(i)).forEach(item => {
                 const { checked, quantity } = dadosVenda(item, lojinha)
 
-                const preco = item.system.price.value.copperValue
-
-                const valorVenda =
-                    item.type === "treasure"
-                        ? preco
-                        : Math.floor(preco / 2)
-
-                const valorTotal = valorVenda * quantity
-
-                if (checked) {
-                    resumo.push({
-                        item, vendedor: actor.name, quantity, valorVenda, valorTexto: formatarPreco(valorTotal)
-                    })
-                }
+                if (checked) {adicionarResumo(resumo, item, quantity, actor.name)}
             })
         }
 
@@ -622,18 +414,18 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
             try {
 
                 await DialogV2.confirm({
-                window: {
-                    title: "Confirmar venda"
-                },
-                content: mensagem,
-                yes: {
-                    label: "Vender",
-                    callback: () => venderItens(party)
-                },
-                no: {
-                    label: "Cancelar"
-                }
-            })
+                    window: {
+                        title: "Confirmar venda"
+                    },
+                    content: mensagem,
+                    yes: {
+                        label: "Vender",
+                        callback: () => venderItens(party)
+                    },
+                    no: {
+                        label: "Cancelar"
+                    }
+                })
 
             } finally {
                 this._vendaEmAndamento = false

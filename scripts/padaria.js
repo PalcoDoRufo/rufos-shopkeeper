@@ -11,6 +11,27 @@ export function dadosVenda(item, lojinha) {
 
 }
 
+export function adicionarResumo(resumo, item, quantity, vendedor) {
+
+    const preco = item.system.price.value.copperValue
+
+    const valorVenda =
+        item.type === "treasure"
+            ? preco
+            : Math.floor(preco / 2)
+
+    const valorTotal = valorVenda * quantity
+
+    resumo.push({
+        item,
+        vendedor,
+        quantity,
+        valorVenda,
+        valorTexto: formatarPreco(valorTotal)
+    })
+
+}
+
 export function formatarPreco(cobre) {
 
     const gp = Math.floor(cobre / 100)
