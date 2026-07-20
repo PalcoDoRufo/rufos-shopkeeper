@@ -1,5 +1,5 @@
 import { ShopState } from "./shop-state.js"
-import { formatarPreco, adicionarPO, calcularValorPorJogador, distribuirPO, itensVendinha, calcularVenda, venderItens } from "./padaria.js"
+import { dadosVenda, formatarPreco, adicionarPO, calcularValorPorJogador, distribuirPO, itensVendinha, calcularVenda, venderItens } from "./padaria.js"
 
 const { ApplicationV2, HandlebarsApplicationMixin, DialogV2 } = foundry.applications.api
 
@@ -50,9 +50,7 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
 
         const stash = {
             weapons: party.items.filter(i => i.type === "weapon" && blacklist(i)).map(item => {
-                const key = item.uuid.replaceAll(".", "_")
-                const checked = lojinha.itemsLoja[key]?.checked ?? false
-                const quantity = lojinha.itemsLoja[key]?.quantity ?? 1
+                const { checked, quantity } = dadosVenda(item, lojinha)
 
                 const preco = item.system.price.value.copperValue
 
@@ -72,9 +70,7 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
                 return { item, checked, quantity }
             }),
             shields: party.items.filter(i => i.type === "shield" && blacklist(i)).map(item => {
-                const key = item.uuid.replaceAll(".", "_")
-                const checked = lojinha.itemsLoja[key]?.checked ?? false
-                const quantity = lojinha.itemsLoja[key]?.quantity ?? 1
+                const { checked, quantity } = dadosVenda(item, lojinha)
 
                 const preco = item.system.price.value.copperValue
 
@@ -94,9 +90,7 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
                 return { item, checked, quantity }
             }),
             armor: party.items.filter(i => i.type === "armor" && blacklist(i)).map(item => {
-                const key = item.uuid.replaceAll(".", "_")
-                const checked = lojinha.itemsLoja[key]?.checked ?? false
-                const quantity = lojinha.itemsLoja[key]?.quantity ?? 1
+                const { checked, quantity } = dadosVenda(item, lojinha)
 
                 const preco = item.system.price.value.copperValue
 
@@ -116,9 +110,7 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
                 return { item, checked, quantity }
             }),
             equipment: party.items.filter(i => i.type === "equipment" && blacklist(i)).map(item => {
-                const key = item.uuid.replaceAll(".", "_")
-                const checked = lojinha.itemsLoja[key]?.checked ?? false
-                const quantity = lojinha.itemsLoja[key]?.quantity ?? 1
+                const { checked, quantity } = dadosVenda(item, lojinha)
 
                 const preco = item.system.price.value.copperValue
 
@@ -138,9 +130,7 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
                 return { item, checked, quantity }
             }),
             consumables: party.items.filter(i => i.type === "consumable" && blacklist(i)).map(item => {
-                const key = item.uuid.replaceAll(".", "_")
-                const checked = lojinha.itemsLoja[key]?.checked ?? false
-                const quantity = lojinha.itemsLoja[key]?.quantity ?? 1
+                const { checked, quantity } = dadosVenda(item, lojinha)
 
                 const preco = item.system.price.value.copperValue
 
@@ -160,9 +150,7 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
                 return { item, checked, quantity }
             }),
             ammunition: party.items.filter(i => i.type === "ammo" && blacklist(i)).map(item => {
-                const key = item.uuid.replaceAll(".", "_")
-                const checked = lojinha.itemsLoja[key]?.checked ?? false
-                const quantity = lojinha.itemsLoja[key]?.quantity ?? 1
+                const { checked, quantity } = dadosVenda(item, lojinha)
 
                 const preco = item.system.price.value.copperValue
 
@@ -182,9 +170,7 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
                 return { item, checked, quantity }
             }),
             treasure: party.items.filter(i => i.type === "treasure" && blacklist(i)).map(item => {
-                const key = item.uuid.replaceAll(".", "_")
-                const checked = lojinha.itemsLoja[key]?.checked ?? false
-                const quantity = lojinha.itemsLoja[key]?.quantity ?? 1
+                const { checked, quantity } = dadosVenda(item, lojinha)
 
                 const preco = item.system.price.value.copperValue
 
@@ -204,9 +190,7 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
                 return { item, checked, quantity }
             }),
             container: party.items.filter(i => i.type === "backpack" && blacklist(i)).map(item => {
-                const key = item.uuid.replaceAll(".", "_")
-                const checked = lojinha.itemsLoja[key]?.checked ?? false
-                const quantity = lojinha.itemsLoja[key]?.quantity ?? 1
+                const { checked, quantity } = dadosVenda(item, lojinha)
 
                 const preco = item.system.price.value.copperValue
 
@@ -229,9 +213,7 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
 
         for (const actor of party.members) {
             actor.items.filter(i => i.type === "weapon" && blacklist(i)).forEach(item => {
-                const key = item.uuid.replaceAll(".", "_")
-                const checked = lojinha.itemsLoja[key]?.checked ?? false
-                const quantity = lojinha.itemsLoja[key]?.quantity ?? 1
+                const { checked, quantity } = dadosVenda(item, lojinha)
 
                 const preco = item.system.price.value.copperValue
 
@@ -249,9 +231,7 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
                 }
             })
             actor.items.filter(i => i.type === "shield" && blacklist(i)).forEach(item => {
-                const key = item.uuid.replaceAll(".", "_")
-                const checked = lojinha.itemsLoja[key]?.checked ?? false
-                const quantity = lojinha.itemsLoja[key]?.quantity ?? 1
+                const { checked, quantity } = dadosVenda(item, lojinha)
 
                 const preco = item.system.price.value.copperValue
 
@@ -269,9 +249,7 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
                 }
             })
             actor.items.filter(i => i.type === "armor" && blacklist(i)).forEach(item => {
-                const key = item.uuid.replaceAll(".", "_")
-                const checked = lojinha.itemsLoja[key]?.checked ?? false
-                const quantity = lojinha.itemsLoja[key]?.quantity ?? 1
+                const { checked, quantity } = dadosVenda(item, lojinha)
 
                 const preco = item.system.price.value.copperValue
 
@@ -289,9 +267,7 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
                 }
             })
             actor.items.filter(i => i.type === "equipment" && blacklist(i)).forEach(item => {
-                const key = item.uuid.replaceAll(".", "_")
-                const checked = lojinha.itemsLoja[key]?.checked ?? false
-                const quantity = lojinha.itemsLoja[key]?.quantity ?? 1
+                const { checked, quantity } = dadosVenda(item, lojinha)
 
                 const preco = item.system.price.value.copperValue
 
@@ -309,9 +285,7 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
                 }
             })
             actor.items.filter(i => i.type === "consumable" && blacklist(i)).forEach(item => {
-                const key = item.uuid.replaceAll(".", "_")
-                const checked = lojinha.itemsLoja[key]?.checked ?? false
-                const quantity = lojinha.itemsLoja[key]?.quantity ?? 1
+                const { checked, quantity } = dadosVenda(item, lojinha)
 
                 const preco = item.system.price.value.copperValue
 
@@ -329,9 +303,7 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
                 }
             })
             actor.items.filter(i => i.type === "ammo" && blacklist(i)).forEach(item => {
-                const key = item.uuid.replaceAll(".", "_")
-                const checked = lojinha.itemsLoja[key]?.checked ?? false
-                const quantity = lojinha.itemsLoja[key]?.quantity ?? 1
+                const { checked, quantity } = dadosVenda(item, lojinha)
 
                 const preco = item.system.price.value.copperValue
 
@@ -349,9 +321,7 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
                 }
             })
             actor.items.filter(i => i.type === "treasure" && blacklist(i)).forEach(item => {
-                const key = item.uuid.replaceAll(".", "_")
-                const checked = lojinha.itemsLoja[key]?.checked ?? false
-                const quantity = lojinha.itemsLoja[key]?.quantity ?? 1
+                const { checked, quantity } = dadosVenda(item, lojinha)
 
                 const preco = item.system.price.value.copperValue
 
@@ -369,9 +339,7 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
                 }
             })
             actor.items.filter(i => i.type === "backpack" && blacklist(i)).forEach(item => {
-                const key = item.uuid.replaceAll(".", "_")
-                const checked = lojinha.itemsLoja[key]?.checked ?? false
-                const quantity = lojinha.itemsLoja[key]?.quantity ?? 1
+                const { checked, quantity } = dadosVenda(item, lojinha)
 
                 const preco = item.system.price.value.copperValue
 
@@ -420,58 +388,42 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
                 checked: lojinha.playersLoja[actor.id] ?? true,
 
                 weapons: actor.items.filter(i => i.type === "weapon" && blacklist(i)).map(item => {
-                    const key = item.uuid.replaceAll(".", "_")
-                    const checked = lojinha.itemsLoja[key]?.checked ?? false
-                    const quantity = lojinha.itemsLoja[key]?.quantity ?? 1
+                    const { checked, quantity } = dadosVenda(item, lojinha)
 
                     return { item, checked, quantity }
                 }),
                 shields: actor.items.filter(i => i.type === "shield" && blacklist(i)).map(item => {
-                    const key = item.uuid.replaceAll(".", "_")
-                    const checked = lojinha.itemsLoja[key]?.checked ?? false
-                    const quantity = lojinha.itemsLoja[key]?.quantity ?? 1
+                    const { checked, quantity } = dadosVenda(item, lojinha)
 
                     return { item, checked, quantity }
                 }),
                 armor: actor.items.filter(i => i.type === "armor" && blacklist(i)).map(item => {
-                    const key = item.uuid.replaceAll(".", "_")
-                    const checked = lojinha.itemsLoja[key]?.checked ?? false
-                    const quantity = lojinha.itemsLoja[key]?.quantity ?? 1
+                    const { checked, quantity } = dadosVenda(item, lojinha)
 
                     return { item, checked, quantity }
                 }),
                 equipment: actor.items.filter(i => i.type === "equipment" && blacklist(i)).map(item => {
-                    const key = item.uuid.replaceAll(".", "_")
-                    const checked = lojinha.itemsLoja[key]?.checked ?? false
-                    const quantity = lojinha.itemsLoja[key]?.quantity ?? 1
+                    const { checked, quantity } = dadosVenda(item, lojinha)
 
                     return { item, checked, quantity }
                 }),
                 consumables: actor.items.filter(i => i.type === "consumable" && blacklist(i)).map(item => {
-                    const key = item.uuid.replaceAll(".", "_")
-                    const checked = lojinha.itemsLoja[key]?.checked ?? false
-                    const quantity = lojinha.itemsLoja[key]?.quantity ?? 1
+                    const { checked, quantity } = dadosVenda(item, lojinha)
 
                     return { item, checked, quantity }
                 }),
                 ammunition: actor.items.filter(i => i.type === "ammo" && blacklist(i)).map(item => {
-                    const key = item.uuid.replaceAll(".", "_")
-                    const checked = lojinha.itemsLoja[key]?.checked ?? false
-                    const quantity = lojinha.itemsLoja[key]?.quantity ?? 1
+                    const { checked, quantity } = dadosVenda(item, lojinha)
 
                     return { item, checked, quantity }
                 }),
                 treasure: actor.items.filter(i => i.type === "treasure" && blacklist(i)).map(item => {
-                    const key = item.uuid.replaceAll(".", "_")
-                    const checked = lojinha.itemsLoja[key]?.checked ?? false
-                    const quantity = lojinha.itemsLoja[key]?.quantity ?? 1
+                    const { checked, quantity } = dadosVenda(item, lojinha)
 
                     return { item, checked, quantity }
                 }),
                 container: actor.items.filter(i => i.type === "backpack" && blacklist(i)).map(item => {
-                    const key = item.uuid.replaceAll(".", "_")
-                    const checked = lojinha.itemsLoja[key]?.checked ?? false
-                    const quantity = lojinha.itemsLoja[key]?.quantity ?? 1
+                    const { checked, quantity } = dadosVenda(item, lojinha)
 
                     return { item, checked, quantity }
                 })

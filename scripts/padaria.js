@@ -1,5 +1,15 @@
 import { ShopState } from "./shop-state.js"
 
+export function dadosVenda(item, lojinha) {
+
+    const key = item.uuid.replaceAll(".", "_")
+
+    return {
+        checked: lojinha.itemsLoja[key]?.checked ?? false,
+        quantity: lojinha.itemsLoja[key]?.checked ?? 1
+    }
+
+}
 
 export function formatarPreco(cobre) {
 
