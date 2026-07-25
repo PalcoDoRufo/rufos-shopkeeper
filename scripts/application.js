@@ -1,5 +1,6 @@
 import { ShopState } from "./shop-state.js"
 import { categoriasInventario, dadosVenda, adicionarResumo, formatarPreco, adicionarPO, calcularValorPorJogador, distribuirPO, itensVendinha, calcularVenda, venderItens } from "./padaria.js"
+import { getSocket } from "./socket.js"
 
 const { ApplicationV2, HandlebarsApplicationMixin, DialogV2 } = foundry.applications.api
 
@@ -330,7 +331,16 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
                     content: mensagem,
                     yes: {
                         label: "Vender",
-                        callback: () => venderItens(party)
+                        callback: async () => {
+
+                            if (game.user.isGM) {
+                                await venderItens()
+                            } else {
+                                const socket = getSocket()
+                                await socket.executeAsGM("sellItems")
+                            }
+
+                        }
                     },
                     no: {
                         label: "Cancelar"

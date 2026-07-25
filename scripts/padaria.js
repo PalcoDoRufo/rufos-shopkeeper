@@ -1,5 +1,7 @@
 import { ShopState } from "./shop-state.js"
 
+let vendaEmAndamento = false
+
 export const categoriasInventario = [
 
     ["weapons", "weapon"],
@@ -75,7 +77,7 @@ export async function adicionarPO(actor, cobre) {
 
 export function calcularValorPorJogador(valorTotal, quantidadeJogadores) {
 
-    if (quantidadeJogadores === 0) {return 0}
+    if (quantidadeJogadores === 0) { return 0 }
 
     return Math.floor(valorTotal / quantidadeJogadores)
 
@@ -112,7 +114,7 @@ export function itensVendinha(party) {
 
             if (!dados?.checked) continue
 
-            itensVendinha.push({item, actor, quantity: dados.quantity ?? 1})
+            itensVendinha.push({ item, actor, quantity: dados.quantity ?? 1 })
         }
     }
 
@@ -132,42 +134,50 @@ export function calcularVenda(itensVendinha) {
 
         const preco = venda.item.system.price.value.copperValue
 
-        const valorVenda = venda.item.type === "treasure" ? preco : Math.floor(preco/2)
+        const valorVenda = venda.item.type === "treasure" ? preco : Math.floor(preco / 2)
 
         return total + (valorVenda * venda.quantity)
 
-    },0)
+    }, 0)
 }
 
-export async function venderItens(party) {
+export async function venderItens() {
 
-    const itens = itensVendinha(party)
-    const lojinha = ShopState.getState()
-    const valorTotal = calcularVenda(itens)
+    if (vendaEmAndamento) return
+    vendaEmAndamento = true
 
-    const jogadoresMarcados = Object.values(lojinha.playersLoja ?? {}).filter(Boolean).length
+    try {
+        const party = ShopState.getParty()
 
-    const valorPorJogador = calcularValorPorJogador(valorTotal, jogadoresMarcados)
+        const itens = itensVendinha(party)
+        const lojinha = ShopState.getState()
+        const valorTotal = calcularVenda(itens)
 
-    console.log("Itens vendidos:", itens)
-    console.log("Valor total:", valorTotal)
-    console.log("Valor por jogador:", valorPorJogador)
+        const jogadoresMarcados = Object.values(lojinha.playersLoja ?? {}).filter(Boolean).length
 
-    await distribuirPO(lojinha.playersLoja, valorPorJogador)
+        const valorPorJogador = calcularValorPorJogador(valorTotal, jogadoresMarcados)
 
-    await removerItensVendidos(itens)
+        console.log("Itens vendidos:", itens)
+        console.log("Valor total:", valorTotal)
+        console.log("Valor por jogador:", valorPorJogador)
 
-    await limparFlagsVendidas(party, itens)
+        await distribuirPO(lojinha.playersLoja, valorPorJogador)
 
-    console.log("Venda concluída.")
+        await removerItensVendidos(itens)
 
+        await limparFlagsVendidas(party, itens)
+
+        console.log("Venda concluída.")
+    } finally {
+        vendaEmAndamento = false
+    }
 }
 
 export async function removerItensVendidos(itens) {
 
     for (const venda of itens) {
 
-        const {item, quantity} = venda
+        const { item, quantity } = venda
 
         const quantidadeAtual = item.system.quantity
         const quantidadeRestante = quantidadeAtual - quantity

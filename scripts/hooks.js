@@ -46,7 +46,7 @@ export function hookSynchro() {
             if (lojinha.rendered) {
                 lojinha.render();
             }
-        }, 0);
+        }, 150);
     });
 
 }
