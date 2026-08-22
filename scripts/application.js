@@ -167,9 +167,9 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
                 this.element.querySelector(`.tabsPj[data-tab="${tab.dataset.tab}"]`).classList.add("exibindo2")
 
                 if (tab.dataset.tab === "stash") {
-                    this.element.querySelector(".portrait").src = "modules/rufos-shopkeeper/assets/Stash.webp"
+                    this.element.querySelector(".retrato").src = "modules/rufos-shopkeeper/assets/Stash.webp"
                 } else {
-                    this.element.querySelector(".portrait").src = context.personagens.find(p => p.id === tab.dataset.tab).img
+                    this.element.querySelector(".retrato").src = context.personagens.find(p => p.id === tab.dataset.tab).img
                 }
 
                 sessionStorage.setItem("rufos-shopkeeper-viewLoja", tab.dataset.tab);
