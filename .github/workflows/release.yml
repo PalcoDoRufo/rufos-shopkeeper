@@ -1,32 +1,64 @@
 name: Release
 
 on:
-  release:
-    types: [published]
+  push:
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
+  validar:
+    uses: ./.github/workflows/ci.yml
+
   publicar:
+    needs: validar
     runs-on: ubuntu-latest
     steps:
       - name: Baixar o código
         uses: actions/checkout@v6
 
-      - name: Ajustar o module.json com a versão da Release
+      - name: Ler a versão do module.json
+        id: versao
         run: |
-          VERSION="${GITHUB_REF_NAME#v}"
-          jq --arg v "$VERSION" \
-             --arg dl "https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/rufos-shopkeeper.zip" \
-             '.version = $v | .download = $dl' module.json > module.tmp
+          VERSION=$(jq -r '.version' module.json)
+          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Ver se essa versão já foi publicada
+        id: existe
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "${{ steps.versao.outputs.tag }}" > /dev/null 2>&1; then
+            echo "publicada=true" >> "$GITHUB_OUTPUT"
+            echo "A versão ${{ steps.versao.outputs.tag }} já existe. Nada a fazer."
+          else
+            echo "publicada=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Ajustar o endereço de download no module.json
+        if: steps.existe.outputs.publicada == 'false'
+        run: |
+          jq --arg dl "https://github.com/${GITHUB_REPOSITORY}/releases/download/${{ steps.versao.outputs.tag }}/rufos-shopkeeper.zip" \
+             '.download = $dl' module.json > module.tmp
           mv module.tmp module.json
           cat module.json
 
       - name: Montar o rufos-shopkeeper.zip
+        if: steps.existe.outputs.publicada == 'false'
         run: zip -r rufos-shopkeeper.zip module.json scripts styles templates assets README.md LICENSE
 
-      - name: Anexar os arquivos na Release
+      - name: Testar o zip
+        if: steps.existe.outputs.publicada == 'false'
+        run: |
+          unzip -tq rufos-shopkeeper.zip
+          unzip -l rufos-shopkeeper.zip | grep -E ' module.json$'
+
+      - name: Criar a Release
+        if: steps.existe.outputs.publicada == 'false'
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload "$GITHUB_REF_NAME" module.json rufos-shopkeeper.zip --clobber
+        run: |
+          gh release create "${{ steps.versao.outputs.tag }}" module.json rufos-shopkeeper.zip \
+            --title "${{ steps.versao.outputs.tag }}" --generate-notes --target "$GITHUB_SHA"

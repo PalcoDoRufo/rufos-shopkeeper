@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  workflow_call:
 
 jobs:
   validar:
@@ -17,10 +18,26 @@ jobs:
           jq empty module.json
           jq -e '.id and .title and .version and .compatibility and .manifest and .download' module.json > /dev/null
 
+      - name: Conferir o formato da versão (X.Y.Z)
+        run: |
+          VERSION=$(jq -r '.version' module.json)
+          echo "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' || { echo "Versão inválida: $VERSION"; exit 1; }
+
       - name: Conferir se os arquivos citados existem
         run: |
           for f in $(jq -r '(.esmodules // [])[], (.styles // [])[]' module.json); do
             if [ -f "$f" ]; then echo "OK: $f"; else echo "FALTANDO: $f"; exit 1; fi
           done
+
+      - name: Conferir se os imports apontam para arquivos existentes
+        run: |
+          ERRO=0
+          for f in scripts/*.js; do
+            while read -r i; do
+              if [ ! -f "scripts/$i" ]; then echo "Import quebrado em $f: $i"; ERRO=1; fi
+            done < <(grep -oE 'from "\./[^"]+"' "$f" | tr -d '\r' | sed -E 's/from "\.\/(.*)"/\1/')
+          done
+          exit $ERRO
+
       - name: Checar o código JavaScript (ESLint)
         run: npx --yes eslint@9 scripts
