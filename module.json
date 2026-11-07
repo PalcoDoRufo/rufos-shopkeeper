@@ -12,9 +12,10 @@
     "minimum": 14,
     "verified": 14
   },
-  "manifest": "https://raw.githubusercontent.com/PalcoDoRufo/rufos-shopkeeper/main/module.json",
+  "manifest": "https://github.com/PalcoDoRufo/rufos-shopkeeper/releases/latest/download/module.json",
   "download": "https://github.com/PalcoDoRufo/rufos-shopkeeper/releases/download/v1.2.1/rufos-shopkeeper.zip",
   "url": "https://github.com/PalcoDoRufo/rufos-shopkeeper",
+  "bugs": "https://github.com/PalcoDoRufo/rufos-shopkeeper/issues",
   "esmodules": [
     "scripts/module.js"
   ],
