@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+
+      - name: Validar o module.json
+        run: |
+          jq empty module.json
+          jq -e '.id and .title and .version and .compatibility and .manifest and .download' module.json > /dev/null
+
+      - name: Conferir se os arquivos citados existem
+        run: |
+          for f in $(jq -r '(.esmodules // [])[], (.styles // [])[]' module.json); do
+            if [ -f "$f" ]; then echo "OK: $f"; else echo "FALTANDO: $f"; exit 1; fi
+          done
