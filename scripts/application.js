@@ -6,7 +6,7 @@ const { ApplicationV2, HandlebarsApplicationMixin, DialogV2 } = foundry.applicat
 
 export class shopkeeperApplication extends HandlebarsApplicationMixin(ApplicationV2) {
 
-    static DEFAULT_OPTIONS = 
+    static DEFAULT_OPTIONS = {
         id: "rufos-shopkeeper",
         position: {
             width: 1202,

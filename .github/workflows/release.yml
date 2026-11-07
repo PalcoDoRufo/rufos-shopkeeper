@@ -1,0 +1,32 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v6
+
+      - name: Ajustar o module.json com a versão da Release
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          jq --arg v "$VERSION" \
+             --arg dl "https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/rufos-shopkeeper.zip" \
+             '.version = $v | .download = $dl' module.json > module.tmp
+          mv module.tmp module.json
+          cat module.json
+
+      - name: Montar o rufos-shopkeeper.zip
+        run: zip -r rufos-shopkeeper.zip module.json scripts styles templates assets README.md LICENSE
+
+      - name: Anexar os arquivos na Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$GITHUB_REF_NAME" module.json rufos-shopkeeper.zip --clobber
