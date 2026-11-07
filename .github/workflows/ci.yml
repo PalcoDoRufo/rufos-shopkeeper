@@ -22,3 +22,5 @@ jobs:
           for f in $(jq -r '(.esmodules // [])[], (.styles // [])[]' module.json); do
             if [ -f "$f" ]; then echo "OK: $f"; else echo "FALTANDO: $f"; exit 1; fi
           done
+      - name: Checar o código JavaScript (ESLint)
+        run: npx --yes eslint@9 scripts
