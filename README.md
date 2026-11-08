@@ -21,7 +21,9 @@ O Rufo's Shopkeeper resolve isso com uma interface de lojinha centralizada: os j
 
 O módulo adiciona um botão (ícone de caveira) ao grupo **Journal Notes** dos controles de cena, na lateral esquerda da tela. Clique nele para abrir a loja.
 
-![Ícone](https://github.com/PalcoDoRufo/assets-do-rufo/blob/main/rufos-shopkeeper/readme2.webp?raw=true)
+<p align="center">
+  <img src="https://github.com/PalcoDoRufo/assets-do-rufo/blob/main/rufos-shopkeeper/readme2.webp?raw=true" alt="Ícone" width="600">
+</p>
 
 Em resumo, uma venda funciona assim:
 
