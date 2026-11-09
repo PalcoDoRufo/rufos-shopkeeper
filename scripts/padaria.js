@@ -25,14 +25,19 @@ export function dadosVenda(item, lojinha) {
     }
 }
 
-export function adicionarResumo(resumo, item, quantity, vendedor) {
+export function precoVendaUnitario(item) {
 
     const preco = item.system.price.value.copperValue
 
-    const valorVenda =
-        item.type === "treasure"
-            ? preco
-            : Math.floor(preco / 2)
+    return item.type === "treasure"
+        ? preco
+        : Math.floor(preco / 2)
+
+}
+
+export function adicionarResumo(resumo, item, quantity, vendedor) {
+
+    const valorVenda = precoVendaUnitario(item)
 
     const valorTotal = valorVenda * quantity
 
@@ -133,11 +138,7 @@ export function calcularVenda(itensVendinha) {
 
     return itensVendinha.reduce((total, venda) => {
 
-        const preco = venda.item.system.price.value.copperValue
-
-        const valorVenda = venda.item.type === "treasure" ? preco : Math.floor(preco / 2)
-
-        return total + (valorVenda * venda.quantity)
+        return total + (precoVendaUnitario(venda.item) * venda.quantity)
 
     }, 0)
 }
