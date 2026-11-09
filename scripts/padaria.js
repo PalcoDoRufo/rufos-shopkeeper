@@ -83,19 +83,20 @@ export function calcularValorPorJogador(valorTotal, quantidadeJogadores) {
 
 }
 
-export async function distribuirPO(playersLoja, valorPorJogador) {
+export function getJogadoresMarcados(party, playersLoja) {
 
-    for (const actorId of Object.keys(playersLoja)) {
+    return party.members.filter(actor => playersLoja?.[actor.id] ?? true)
 
-        if (!playersLoja[actorId]) continue
+}
 
-        const actor = game.actors.get(actorId)
+export async function distribuirPO(jogadores, valorPorJogador) {
 
-        if (!actor) continue
+    for (const actor of jogadores) {
 
         await adicionarPO(actor, valorPorJogador)
 
     }
+
 }
 
 export function itensVendinha(party) {
@@ -153,7 +154,8 @@ export async function venderItens() {
         const lojinha = ShopState.getState()
         const valorTotal = calcularVenda(itens)
 
-        const jogadoresMarcados = Object.values(lojinha.playersLoja ?? {}).filter(Boolean).length
+        const jogadores = getJogadoresMarcados(party, lojinha.playersLoja)
+        const jogadoresMarcados = jogadores.length
 
         const valorPorJogador = calcularValorPorJogador(valorTotal, jogadoresMarcados)
 
@@ -161,7 +163,7 @@ export async function venderItens() {
         console.log("Valor total:", valorTotal)
         console.log("Valor por jogador:", valorPorJogador)
 
-        await distribuirPO(lojinha.playersLoja, valorPorJogador)
+        await distribuirPO(jogadores, valorPorJogador)
 
         await removerItensVendidos(itens)
 
@@ -195,7 +197,6 @@ export async function removerItensVendidos(itens) {
 
 export async function limparFlagsVendidas(itens) {
 
-    // Para cada item vendido, pede ao Foundry para apagar só a chave dele ("-=").
     const changes = {}
 
     for (const venda of itens) {

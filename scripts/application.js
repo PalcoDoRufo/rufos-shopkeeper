@@ -1,5 +1,5 @@
 import { ShopState } from "./shop-state.js"
-import { categoriasInventario, dadosVenda, adicionarResumo, formatarPreco, adicionarPO, calcularValorPorJogador, distribuirPO, itensVendinha, calcularVenda, venderItens } from "./padaria.js"
+import { categoriasInventario, getJogadoresMarcados, dadosVenda, adicionarResumo, formatarPreco, adicionarPO, calcularValorPorJogador, distribuirPO, itensVendinha, calcularVenda, venderItens } from "./padaria.js"
 import { getSocket } from "./socket.js"
 
 const { ApplicationV2, HandlebarsApplicationMixin, DialogV2 } = foundry.applications.api
@@ -138,9 +138,7 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
         }, 0)
         const valorTotalTexto = formatarPreco(valorTotal)
 
-        const jogadoresMarcados = Object.values(lojinha.playersLoja)
-            .filter(Boolean)
-            .length
+        const jogadoresMarcados = getJogadoresMarcados(party, lojinha.playersLoja).length
 
         const valorPorJogador = calcularValorPorJogador(valorTotal, jogadoresMarcados)
 
@@ -275,7 +273,7 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
 
             const valorTotal = calcularVenda(itens)
 
-            const jogadoresMarcados = Object.values(party.getFlag("rufos-shopkeeper", "lojinha")?.playersLoja ?? {}).filter(Boolean).length
+            const jogadoresMarcados = getJogadoresMarcados(party, party.getFlag("rufos-shopkeeper", "lojinha")?.playersLoja).length
 
             const valorPorJogador = calcularValorPorJogador(valorTotal, jogadoresMarcados)
 
