@@ -1,5 +1,7 @@
 import { getSocket } from "./socket.js"
 
+const CAMINHO_FLAG = "flags.rufos-shopkeeper.lojinha"
+
 export class ShopState {
 
     static getParty() {
@@ -23,55 +25,60 @@ export class ShopState {
 
     }
 
-    static async saveStateAsGM(loja) {
+    static async applyChangesAsGM(changes) {
 
         const party = ShopState.getParty()
 
-        await party.unsetFlag("rufos-shopkeeper", "lojinha");
-        await party.setFlag("rufos-shopkeeper", "lojinha", loja);
+        if (!party) return
 
+        const updates = {}
+
+        for (const [caminho, valor] of Object.entries(changes ?? {})) {
+
+            if (!caminho.startsWith("itemsLoja.") && !caminho.startsWith("playersLoja.")) continue
+
+            updates[`${CAMINHO_FLAG}.${caminho}`] = valor
+
+        }
+
+        if (foundry.utils.isEmpty(updates)) return
+
+        await party.update(updates)
 
     }
 
-    static async saveState(loja) {
-
-        const party = ShopState.getParty()
+    static async applyChanges(changes) {
 
         if (game.user.isGM) {
-            return ShopState.saveStateAsGM(loja)
+            return ShopState.applyChangesAsGM(changes)
         } else {
             const socket = getSocket()
-            await socket.executeAsGM("saveState", loja)
+            await socket.executeAsGM("applyChanges", changes)
         }
 
     }
 
     static async setPlayerChecked(actorId, checked) {
 
-        const loja = ShopState.getState()
-
-        loja.playersLoja[actorId] = checked
-
-        await ShopState.saveState(loja)
+        await ShopState.applyChanges({
+            [`playersLoja.${actorId}`]: checked
+        })
 
     }
 
     static async setItemsChecked(itemUuid, checked) {
 
-        const mercado = ShopState.getState()
-
         const key = itemUuid.replaceAll(".", "_")
 
         if (checked) {
-            mercado.itemsLoja[key] = {
-                checked: true,
-                quantity: 1
-            }
+            await ShopState.applyChanges({
+                [`itemsLoja.${key}`]: { checked: true, quantity: 1 }
+            })
         } else {
-            delete mercado.itemsLoja[key]
+            await ShopState.applyChanges({
+                [`itemsLoja.-=${key}`]: null
+            })
         }
-
-        await ShopState.saveState(mercado)
 
     }
 
@@ -83,9 +90,9 @@ export class ShopState {
 
         if (!loja.itemsLoja[key]) return
 
-        loja.itemsLoja[key].quantity = quantity
-
-        await ShopState.saveState(loja)
+        await ShopState.applyChanges({
+            [`itemsLoja.${key}.quantity`]: quantity
+        })
 
     }
 

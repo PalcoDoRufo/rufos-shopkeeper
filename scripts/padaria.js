@@ -165,7 +165,7 @@ export async function venderItens() {
 
         await removerItensVendidos(itens)
 
-        await limparFlagsVendidas(party, itens)
+        await limparFlagsVendidas(itens)
 
         console.log("Venda concluída.")
     } finally {
@@ -193,17 +193,16 @@ export async function removerItensVendidos(itens) {
     }
 }
 
-export async function limparFlagsVendidas(party, itens) {
+export async function limparFlagsVendidas(itens) {
 
-    const lojinha = foundry.utils.deepClone(
-        party.getFlag("rufos-shopkeeper", "lojinha") ?? {}
-    )
+    // Para cada item vendido, pede ao Foundry para apagar só a chave dele ("-=").
+    const changes = {}
 
     for (const venda of itens) {
         const key = venda.item.uuid.replaceAll(".", "_")
-        delete lojinha.itemsLoja[key]
+        changes[`itemsLoja.-=${key}`] = null
     }
 
-    await ShopState.saveState(lojinha)
+    await ShopState.applyChanges(changes)
 
 }

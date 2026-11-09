@@ -7,7 +7,7 @@ export function registerSocket() {
 
     socket = socketlib.registerModule("rufos-shopkeeper")
 
-    socket.register("saveState", ShopState.saveStateAsGM)
+    socket.register("applyChanges", ShopState.applyChangesAsGM)
     socket.register("sellItems", venderItens)
 
 }
@@ -17,4 +17,3 @@ export function getSocket() {
     return socket
 
 }
-
