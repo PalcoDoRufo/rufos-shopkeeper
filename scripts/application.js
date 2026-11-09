@@ -36,18 +36,13 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
 
         let mudouPlayers = false
 
-        const moedas = [
-            "Platinum Pieces",
-            "Gold Pieces",
-            "Silver Pieces",
-            "Copper Pieces"
-        ]
+        const ehMoeda = item => item.isCoinage ?? item.system.stackGroup === "coins"
 
         const blacklist = item => {
             return (
                 item.system.quantity > 0 &&
                 item.system.price.value.copperValue != 0 &&
-                !moedas.includes(item.name)
+                !ehMoeda(item)
             )
         }
 
@@ -134,7 +129,7 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
             })
 
         const valorTotal = resumo.reduce((total, item) => {
-            return total + (item.valorVenda * item.quantity)
+            return total + item.valorTotal
         }, 0)
         const valorTotalTexto = formatarPreco(valorTotal)
 
