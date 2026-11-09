@@ -163,22 +163,40 @@ export async function venderItens() {
 
         const itens = itensVendinha(party)
         const lojinha = ShopState.getState()
-        const valorTotal = calcularVenda(itens)
 
         const jogadores = getJogadoresMarcados(party, lojinha.playersLoja)
-        const jogadoresMarcados = jogadores.length
 
-        const valorPorJogador = calcularValorPorJogador(valorTotal, jogadoresMarcados)
+        if (itens.length === 0) return
 
-        console.log("Itens vendidos:", itens)
+        if (jogadores.length === 0) {
+            ui.notifications.warn("Nenhum jogador marcado para receber. Venda cancelada.")
+            return
+        }
+
+        const vendidos = await removerItensVendidos(itens)
+
+        if (vendidos.length < itens.length) {
+            ui.notifications.warn(`${itens.length - vendidos.length} item(ns) não puderam ser vendidos e continuam no inventário.`)
+        }
+
+        if (vendidos.length === 0) return
+
+        const valorTotal = calcularVenda(vendidos)
+        const valorPorJogador = calcularValorPorJogador(valorTotal, jogadores.length)
+
+        console.log("Itens vendidos:", vendidos)
         console.log("Valor total:", valorTotal)
         console.log("Valor por jogador:", valorPorJogador)
 
-        await distribuirPO(jogadores, valorPorJogador)
+        await limparFlagsVendidas(vendidos)
 
-        await removerItensVendidos(itens)
-
-        await limparFlagsVendidas(itens)
+        try {
+            await distribuirPO(jogadores, valorPorJogador)
+        } catch (erro) {
+            console.error("Rufo's Shopkeeper | Falha ao pagar os jogadores:", erro)
+            ui.notifications.error(`Os itens foram removidos, mas o pagamento falhou. Pague ${formatarPreco(valorPorJogador)} para cada jogador manualmente.`, { permanent: true })
+            return
+        }
 
         console.log("Venda concluída.")
     } finally {
@@ -188,22 +206,33 @@ export async function venderItens() {
 
 export async function removerItensVendidos(itens) {
 
+    const removidos = []
+
     for (const venda of itens) {
 
         const { item, quantity } = venda
 
-        const quantidadeAtual = item.system.quantity
-        const quantidadeRestante = quantidadeAtual - quantity
+        try {
 
-        if (quantidadeRestante <= 0) {
-            await item.delete()
-            continue
+            const quantidadeAtual = item.system.quantity
+            const quantidadeRestante = quantidadeAtual - quantity
+
+            if (quantidadeRestante <= 0) {
+                await item.delete()
+            } else {
+                await item.update({
+                    "system.quantity": quantidadeRestante
+                })
+            }
+
+            removidos.push(venda)
+
+        } catch (erro) {
+            console.error(`Rufo's Shopkeeper | Falha ao remover ${item.name}:`, erro)
         }
-
-        await item.update({
-            "system.quantity": quantidadeRestante
-        })
     }
+
+    return removidos
 }
 
 export async function limparFlagsVendidas(itens) {
