@@ -15,13 +15,19 @@ export const categoriasInventario = [
 
 ]
 
+export function limitarQuantidade(item, quantidadeSalva) {
+
+    return Math.min(quantidadeSalva ?? 1, item.system.quantity)
+
+}
+
 export function dadosVenda(item, lojinha) {
 
     const key = item.uuid.replaceAll(".", "_")
 
     return {
         checked: lojinha.itemsLoja[key]?.checked ?? false,
-        quantity: lojinha.itemsLoja[key]?.quantity ?? 1
+        quantity: limitarQuantidade(item, lojinha.itemsLoja[key]?.quantity)
     }
 }
 
@@ -120,7 +126,11 @@ export function itensVendinha(party) {
 
             if (!dados?.checked) continue
 
-            itensVendinha.push({ item, actor, quantity: dados.quantity ?? 1 })
+            const quantity = limitarQuantidade(item, dados.quantity)
+
+            if (quantity <= 0) continue
+
+            itensVendinha.push({ item, actor, quantity })
         }
     }
 
