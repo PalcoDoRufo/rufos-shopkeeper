@@ -30,6 +30,8 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
 
         const viewLoja = sessionStorage.getItem("rufos-shopkeeper-viewLoja") ?? "rufo"
 
+        const stashAtivo = viewLoja === "stash"
+
         const resumo = []
 
         const stash = {}
@@ -48,7 +50,7 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
 
         for (const [nome, tipo] of categoriasInventario) {
 
-            stash[nome] = party.items
+            const linhas = party.items
                 .filter(i => i.type === tipo && blacklist(i))
                 .map(item => {
 
@@ -60,6 +62,8 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
 
                     return {item, checked, quantity}
                 })
+
+            stash[nome] = stashAtivo ? linhas : []
         }
 
         for (const actor of party.members) {
@@ -102,11 +106,13 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
                     mudouPlayers = true
                 }
 
+                const ativo = actor.id === viewLoja
+
                 const inventario = {}
 
                 for (const [nome, tipo] of categoriasInventario) {
 
-                    inventario[nome] = actor.items
+                    inventario[nome] = !ativo ? [] : actor.items
                         .filter(i => i.type === tipo && blacklist(i))
                         .map(item => {
 
@@ -122,6 +128,7 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
                     name: actor.name,
                     img: actor.img,
                     checked: lojinha.playersLoja[actor.id] ?? true,
+                    ativo,
 
                     ...inventario
 
@@ -139,33 +146,43 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
 
         const valorPorJogadorTexto = formatarPreco(valorPorJogador)
 
-        return { personagens, personagensAside, stash, lojinha, viewLoja, resumo, valorTotalTexto, valorPorJogadorTexto }
+        return { personagens, personagensAside, stash, stashAtivo, lojinha, viewLoja, resumo, valorTotalTexto, valorPorJogadorTexto }
 
     }
 
     async _onRender(context, options) {
         await super._onRender(context, options);
 
+        const mostrarAba = tabId => {
+
+            const aba = this.element.querySelector(`.tabsPj[data-tab="${tabId}"]`)
+            if (!aba) return
+
+            this.element.querySelectorAll(".centro section").forEach(secao => {
+                secao.classList.remove("exibindo")
+            })
+            this.element.querySelectorAll(".tabsPj").forEach(botao => {
+                botao.classList.remove("exibindo2")
+            })
+
+            this.element.querySelector(`.centro section[data-inventario="${tabId}"]`)?.classList.add("exibindo")
+            aba.classList.add("exibindo2")
+
+            if (tabId === "stash") {
+                this.element.querySelector(".retrato").src = "modules/rufos-shopkeeper/assets/Stash.webp"
+            } else {
+                const personagem = context.personagens.find(p => p.id === tabId)
+                if (personagem) this.element.querySelector(".retrato").src = personagem.img
+            }
+        }
+
         this.element.querySelectorAll(".tabsPj").forEach(tab => {
             tab.addEventListener("click", () => {
 
-                this.element.querySelectorAll(".centro section").forEach(tabs => {
-                    tabs.classList.remove("exibindo")
-                })
-                this.element.querySelectorAll(".tabsPj").forEach(tabs => {
-                    tabs.classList.remove("exibindo2")
-                })
+                if (tab.dataset.tab === context.viewLoja) return
 
-                this.element.querySelector(`.centro section[data-inventario="${tab.dataset.tab}"]`).classList.add("exibindo")
-                this.element.querySelector(`.tabsPj[data-tab="${tab.dataset.tab}"]`).classList.add("exibindo2")
-
-                if (tab.dataset.tab === "stash") {
-                    this.element.querySelector(".retrato").src = "modules/rufos-shopkeeper/assets/Stash.webp"
-                } else {
-                    this.element.querySelector(".retrato").src = context.personagens.find(p => p.id === tab.dataset.tab).img
-                }
-
-                sessionStorage.setItem("rufos-shopkeeper-viewLoja", tab.dataset.tab);
+                sessionStorage.setItem("rufos-shopkeeper-viewLoja", tab.dataset.tab)
+                this.render()
             })
         })
 
@@ -187,7 +204,17 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
 
             value.textContent = quantia
 
-            await ShopState.setItemQuantity(value.dataset.uuid, quantia)
+            const uuid = value.dataset.uuid
+
+            this._pendentes ??= new Map()
+            clearTimeout(this._pendentes.get(uuid)?.timer)
+
+            const timer = setTimeout(() => {
+                this._pendentes.delete(uuid)
+                ShopState.setItemQuantity(uuid, quantia).catch(console.error)
+            }, 400)
+
+            this._pendentes.set(uuid, { timer, quantia })
         }
 
         this.element.removeEventListener("click", this._onClick)
@@ -255,6 +282,8 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
 
             if (this._vendaEmAndamento) return
             this._vendaEmAndamento = true
+
+            await this._flushQuantidades()
 
             const party = game.actors.find(actor => actor.type === "party" && actor.active)
 
@@ -348,9 +377,31 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
         this.element.removeEventListener("click", this._onSellClick)
         this.element.addEventListener("click", this._onSellClick)
 
-        const tabInicial = this.element.querySelector(`.tabsPj[data-tab="${context.viewLoja}"]`)
-        if (tabInicial && !tabInicial.classList.contains("exibindo2")) {
-            tabInicial.click()
+        mostrarAba(context.viewLoja)
+
+        for (const [uuid, { quantia }] of this._pendentes ?? []) {
+            const campo = this.element.querySelector(`.itemQuantity[data-uuid="${uuid}"]`)
+            if (campo) campo.textContent = quantia
         }
+    }
+
+    async _flushQuantidades() {
+
+        if (!this._pendentes?.size) return
+
+        const lista = [...this._pendentes.entries()]
+        this._pendentes.clear()
+
+        for (const [uuid, { timer, quantia }] of lista) {
+            clearTimeout(timer)
+            await ShopState.setItemQuantity(uuid, quantia)
+        }
+    }
+
+    async close(options) {
+
+        await this._flushQuantidades()
+
+        return super.close(options)
     }
 }

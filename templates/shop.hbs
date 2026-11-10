@@ -20,6 +20,7 @@
                 <img src="modules/rufos-shopkeeper/assets/RufosShopkeeper.webp" alt="shopkeeper">
             </section>
             <section class="inventario" data-inventario="stash">
+                {{#if stashAtivo}}
                 <div class="itemType">
                     <header class="itemHeader">
                         <h3 class="itemTitle">Weapons & Shields</h3 class="itemTitle">
@@ -217,9 +218,11 @@
                         </ul>
                     </div>
                 </div>
+                {{/if}}
             </section>
             {{#each personagens}}
             <section class="inventario" data-inventario="{{id}}">
+                {{#if ativo}}
                 <div class="itemType">
                     <header class="itemHeader">
                         <h3 class="itemTitle">Weapons & Shields</h3 class="itemTitle">
@@ -417,6 +420,7 @@
                         </ul>
                     </div>
                 </div>
+                {{/if}}
             </section>
             {{/each}}
         </div>
