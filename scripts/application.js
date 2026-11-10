@@ -1,8 +1,75 @@
 import { ShopState } from "./shop-state.js"
-import { categoriasInventario, getJogadoresMarcados, dadosVenda, adicionarResumo, formatarPreco, adicionarPO, calcularValorPorJogador, distribuirPO, itensVendinha, calcularVenda, venderItens } from "./padaria.js"
+import { categoriasInventario, getJogadoresMarcados, valorVendaTotal, dadosVenda, adicionarResumo, formatarPreco, adicionarPO, calcularValorPorJogador, distribuirPO, itensVendinha, calcularVenda, venderItens } from "./padaria.js"
 import { getSocket } from "./socket.js"
 
 const { ApplicationV2, HandlebarsApplicationMixin, DialogV2 } = foundry.applications.api
+
+function escaparHTML(texto) {
+    return String(texto)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+}
+
+function montarConfirmacao(itens, jogadores, valorTotal, valorPorJogador) {
+
+    const quantidadeTotal = itens.reduce((total, venda) => total + venda.quantity, 0)
+
+    const linhas = itens.map(({ item, actor, quantity }) => {
+
+        const vendedor = typeof actor === "string" ? actor : actor.name
+
+        return `
+            <li class="shopkeeper-linha">
+                <img src="${escaparHTML(item.img)}" alt="">
+                <span class="shopkeeper-nome">
+                    ${escaparHTML(item.name)}
+                    <small>${escaparHTML(vendedor)}</small>
+                </span>
+                <span class="shopkeeper-qtd">x${quantity}</span>
+                <span class="shopkeeper-valor">${formatarPreco(valorVendaTotal(item, quantity))}</span>
+            </li>`
+    }).join("")
+
+    const chips = jogadores
+        .map(actor => `<span class="shopkeeper-chip">${escaparHTML(actor.name)}</span>`)
+        .join("")
+
+    return `
+        <div class="shopkeeper-confirmacao">
+
+            <p class="shopkeeper-intro">Revise a venda antes de confirmar.</p>
+
+            <ul class="shopkeeper-itens">${linhas}</ul>
+
+            <div class="shopkeeper-totais">
+                <div>
+                    <span>Itens</span>
+                    <strong>${quantidadeTotal}</strong>
+                </div>
+                <div>
+                    <span>Valor total</span>
+                    <strong>${formatarPreco(valorTotal)}</strong>
+                </div>
+                <div class="shopkeeper-destaque">
+                    <span>Por jogador</span>
+                    <strong>${formatarPreco(valorPorJogador)}</strong>
+                </div>
+            </div>
+
+            <div class="shopkeeper-jogadores">
+                <span>Recebem (${jogadores.length}):</span>
+                ${chips}
+            </div>
+
+            <p class="shopkeeper-aviso">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                Os itens vendidos serão removidos dos inventários.
+            </p>
+
+        </div>`
+}
 
 export class shopkeeperApplication extends HandlebarsApplicationMixin(ApplicationV2) {
 
@@ -112,6 +179,7 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
 
                 for (const [nome, tipo] of categoriasInventario) {
 
+                    // Aba fechada: não monta a lista (e o template não desenha nada).
                     inventario[nome] = !ativo ? [] : actor.items
                         .filter(i => i.type === tipo && blacklist(i))
                         .map(item => {
@@ -295,64 +363,33 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
                 return
             }
 
+            const jogadores = getJogadoresMarcados(party, party.getFlag("rufos-shopkeeper", "lojinha")?.playersLoja)
+
+            if (jogadores.length === 0) {
+                ui.notifications.warn("Nenhum jogador marcado para receber.")
+                this._vendaEmAndamento = false
+                return
+            }
+
             const valorTotal = calcularVenda(itens)
 
-            const jogadoresMarcados = getJogadoresMarcados(party, party.getFlag("rufos-shopkeeper", "lojinha")?.playersLoja).length
+            const valorPorJogador = calcularValorPorJogador(valorTotal, jogadores.length)
 
-            const valorPorJogador = calcularValorPorJogador(valorTotal, jogadoresMarcados)
-
-            const quantidadeTotal = itens.reduce((total, venda) => total + venda.quantity, 0)
-
-            const mensagem = `
-            <div class="shopkeeper-confirmacao">
-
-            <h3>Confirmar venda</h3>
-
-            <p>
-                Os seguintes valores serão processados:
-            </p>
-
-            <div class="shopkeeper-resumo-venda">
-
-                <div>
-                    <strong>Itens vendidos</strong>
-                    <span>${quantidadeTotal}</span>
-                </div>
-
-                <div>
-                    <strong>Valor total</strong>
-                    <span>${formatarPreco(valorTotal)}</span>
-                </div>
-
-                <div>
-                    <strong>Jogadores</strong>
-                    <span>${jogadoresMarcados}</span>
-                </div>
-
-                <div>
-                    <strong>Valor por jogador</strong>
-                    <span>${formatarPreco(valorPorJogador)}</span>
-                </div>
-
-            </div>
-
-            <p class="shopkeeper-aviso-venda">
-                <i class="fas fa-triangle-exclamation"></i>
-                Os itens vendidos serão removidos dos inventários.
-            </p>
-
-        </div>
-        `
+            const mensagem = montarConfirmacao(itens, jogadores, valorTotal, valorPorJogador)
 
             try {
 
                 await DialogV2.confirm({
+                    classes: ["rufos-confirmacao"],
+                    position: { width: 520 },
                     window: {
-                        title: "Confirmar venda"
+                        title: "Confirmar venda",
+                        icon: "fa-solid fa-coins"
                     },
                     content: mensagem,
                     yes: {
                         label: "Vender",
+                        icon: "fa-solid fa-coins",
                         callback: async () => {
 
                             if (game.user.isGM) {
@@ -365,7 +402,8 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
                         }
                     },
                     no: {
-                        label: "Cancelar"
+                        label: "Cancelar",
+                        icon: "fa-solid fa-xmark"
                     }
                 })
 
