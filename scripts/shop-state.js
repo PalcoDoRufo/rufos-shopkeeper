@@ -14,13 +14,10 @@ export class ShopState {
 
         const party = ShopState.getParty()
 
-        return foundry.utils.deepClone(
-            party.getFlag("rufos-shopkeeper", "lojinha")
-        ) ?? {
+        return {
             playersLoja: {},
-            itemsLoja: {
-
-            },
+            itemsLoja: {},
+            ...foundry.utils.deepClone(party.getFlag("rufos-shopkeeper", "lojinha") ?? {})
         }
 
     }
