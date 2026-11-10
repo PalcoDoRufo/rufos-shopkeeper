@@ -31,27 +31,25 @@ export function dadosVenda(item, lojinha) {
     }
 }
 
-export function precoVendaUnitario(item) {
+export function valorVendaTotal(item, quantity) {
 
-    const preco = item.system.price.value.copperValue
+    const { value, per } = item.system.price
 
-    return item.type === "treasure"
-        ? preco
-        : Math.floor(preco / 2)
+    const divisor = (per || 1) * (item.type === "treasure" ? 1 : 2)
+
+    return Math.floor(value.copperValue * quantity / divisor)
 
 }
 
 export function adicionarResumo(resumo, item, quantity, vendedor) {
 
-    const valorVenda = precoVendaUnitario(item)
-
-    const valorTotal = valorVenda * quantity
+    const valorTotal = valorVendaTotal(item, quantity)
 
     resumo.push({
         item,
         vendedor,
         quantity,
-        valorVenda,
+        valorTotal,
         valorTexto: formatarPreco(valorTotal)
     })
 }
@@ -148,7 +146,7 @@ export function calcularVenda(itensVendinha) {
 
     return itensVendinha.reduce((total, venda) => {
 
-        return total + (precoVendaUnitario(venda.item) * venda.quantity)
+        return total + valorVendaTotal(venda.item, venda.quantity)
 
     }, 0)
 }
