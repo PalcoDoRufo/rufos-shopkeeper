@@ -1,52 +1,26 @@
 import { ShopState } from "./shop-state.js"
-import { categoriasInventario, getJogadoresMarcados, valorVendaTotal, dadosVenda, adicionarResumo, formatarPreco, adicionarPO, calcularValorPorJogador, distribuirPO, itensVendinha, calcularVenda, venderItens } from "./padaria.js"
+import { categoriasInventario, getJogadoresMarcados, dadosVenda, adicionarResumo, formatarPreco, adicionarPO, calcularValorPorJogador, distribuirPO, itensVendinha, calcularVenda, venderItens } from "./padaria.js"
 import { getSocket } from "./socket.js"
 
 const { ApplicationV2, HandlebarsApplicationMixin, DialogV2 } = foundry.applications.api
 
-function escaparHTML(texto) {
-    return String(texto)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-}
-
 function montarConfirmacao(itens, jogadores, valorTotal, valorPorJogador) {
 
     const quantidadeTotal = itens.reduce((total, venda) => total + venda.quantity, 0)
-
-    const linhas = itens.map(({ item, actor, quantity }) => {
-
-        const vendedor = typeof actor === "string" ? actor : actor.name
-
-        return `
-            <li class="shopkeeper-linha">
-                <img src="${escaparHTML(item.img)}" alt="">
-                <span class="shopkeeper-nome">
-                    ${escaparHTML(item.name)}
-                    <small>${escaparHTML(vendedor)}</small>
-                </span>
-                <span class="shopkeeper-qtd">x${quantity}</span>
-                <span class="shopkeeper-valor">${formatarPreco(valorVendaTotal(item, quantity))}</span>
-            </li>`
-    }).join("")
-
-    const chips = jogadores
-        .map(actor => `<span class="shopkeeper-chip">${escaparHTML(actor.name)}</span>`)
-        .join("")
 
     return `
         <div class="shopkeeper-confirmacao">
 
             <p class="shopkeeper-intro">Revise a venda antes de confirmar.</p>
 
-            <ul class="shopkeeper-itens">${linhas}</ul>
-
             <div class="shopkeeper-totais">
                 <div>
                     <span>Itens</span>
                     <strong>${quantidadeTotal}</strong>
+                </div>
+                <div>
+                    <span>Jogadores</span>
+                    <strong>${jogadores.length}</strong>
                 </div>
                 <div>
                     <span>Valor total</span>
@@ -58,14 +32,9 @@ function montarConfirmacao(itens, jogadores, valorTotal, valorPorJogador) {
                 </div>
             </div>
 
-            <div class="shopkeeper-jogadores">
-                <span>Recebem (${jogadores.length}):</span>
-                ${chips}
-            </div>
-
             <p class="shopkeeper-aviso">
                 <i class="fa-solid fa-triangle-exclamation"></i>
-                Os itens vendidos serão removidos dos inventários.
+                <span>Os itens vendidos serão removidos dos inventários.</span>
             </p>
 
         </div>`
@@ -179,7 +148,6 @@ export class shopkeeperApplication extends HandlebarsApplicationMixin(Applicatio
 
                 for (const [nome, tipo] of categoriasInventario) {
 
-                    // Aba fechada: não monta a lista (e o template não desenha nada).
                     inventario[nome] = !ativo ? [] : actor.items
                         .filter(i => i.type === tipo && blacklist(i))
                         .map(item => {

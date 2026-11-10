@@ -299,7 +299,6 @@
     font-weight: 600;
 }
 
-
 .rufos-confirmacao {
     --sk-vinho: #620100;
     --sk-vermelho: #9E0000;
@@ -312,84 +311,32 @@
 .shopkeeper-confirmacao {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
+    padding: 16px;
+    background-color: var(--sk-papel);
+    border: 2px solid var(--sk-marrom);
+    border-radius: 8px;
     color: var(--sk-tinta);
 }
 
 .shopkeeper-intro {
     margin: 0;
-    color: inherit;
+    color: var(--sk-tinta);
     font-size: 14px;
-}
-
-.shopkeeper-itens {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    max-height: 240px;
-    overflow-y: auto;
-    background-color: var(--sk-papel);
-    border: 2px solid var(--sk-marrom);
-    border-radius: 6px;
-}
-
-.shopkeeper-linha {
-    display: grid;
-    grid-template-columns: 32px 1fr auto auto;
-    align-items: center;
-    gap: 10px;
-    padding: 6px 10px;
-    border-bottom: 1px solid rgba(120, 100, 82, .35);
-}
-
-.shopkeeper-linha:last-child {
-    border-bottom: none;
-}
-
-.shopkeeper-linha img {
-    width: 32px;
-    height: 32px;
-    border: 1px solid var(--sk-marrom);
-    border-radius: 4px;
-    object-fit: cover;
-}
-
-.shopkeeper-nome {
-    display: flex;
-    flex-direction: column;
-    font-weight: 600;
-    line-height: 1.2;
-}
-
-.shopkeeper-nome small {
-    font-weight: 400;
-    font-style: italic;
-    color: var(--sk-marrom);
-}
-
-.shopkeeper-qtd {
-    font-weight: 600;
-    color: var(--sk-marrom);
-}
-
-.shopkeeper-valor {
-    min-width: 70px;
-    text-align: right;
-    font-weight: 700;
 }
 
 .shopkeeper-totais {
     display: grid;
-    grid-template-columns: 1fr 1.4fr 1.4fr;
-    gap: 8px;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
 }
 
 .shopkeeper-totais > div {
     display: flex;
     flex-direction: column;
     gap: 4px;
-    padding: 10px 12px;
-    background-color: var(--sk-papel);
+    padding: 10px 14px;
+    background-color: #fff;
     border: 2px solid var(--sk-marrom);
     border-radius: 6px;
 }
@@ -402,7 +349,8 @@
 }
 
 .shopkeeper-totais strong {
-    font-size: 17px;
+    font-size: 18px;
+    color: var(--sk-tinta);
 }
 
 .shopkeeper-totais .shopkeeper-destaque {
@@ -418,42 +366,26 @@
     color: #ede4da;
 }
 
-.shopkeeper-jogadores {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 6px;
-    font-size: 13px;
-}
-
-.shopkeeper-jogadores > span:first-child {
-    font-weight: 600;
-}
-
-.shopkeeper-chip {
-    padding: 2px 10px;
-    background-color: var(--sk-ouro);
-    border: 1px solid var(--sk-marrom);
-    border-radius: 999px;
-    font-size: 12px;
-}
-
 .shopkeeper-aviso {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
     margin: 0;
-    padding: 8px 12px;
-    background-color: rgba(158, 0, 0, .1);
-    border-left: 4px solid var(--sk-vermelho);
-    border-radius: 4px;
-    font-size: 13px;
+    padding: 12px 14px;
+    background-color: #fff1c9;
+    border: 2px solid var(--sk-vermelho);
+    border-radius: 6px;
+    color: var(--sk-vinho);
+    font-size: 14px;
+    font-weight: 600;
 }
 
 .shopkeeper-aviso i {
+    font-size: 22px;
     color: var(--sk-vermelho);
 }
 
+/* botões do diálogo */
 .rufos-confirmacao .form-footer button {
     border: 2px solid var(--sk-ouro);
     background-color: var(--sk-vinho);
