@@ -41,3 +41,6 @@ jobs:
 
       - name: Checar o código JavaScript (ESLint)
         run: npx --yes eslint@9 scripts
+
+      - name: Rodar os testes unitários
+        run: node --test tests/*.test.js
