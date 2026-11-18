@@ -43,4 +43,4 @@ jobs:
         run: npx --yes eslint@9 scripts
 
       - name: Rodar os testes unitários
-        run: node --test tests/*.test.js
+        run: node --test --experimental-test-coverage tests/*.test.js
